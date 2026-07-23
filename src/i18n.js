@@ -16,7 +16,11 @@ export class I18nEngine {
 
   async loadLanguage(lang) {
     try {
-      const response = await fetch(`/locales/${lang}.json`);
+      // Use relative path for GitHub Pages compatibility
+      let response = await fetch(`./locales/${lang}.json`);
+      if (!response.ok) {
+        response = await fetch(`locales/${lang}.json`);
+      }
       if (!response.ok) throw new Error(`Failed to load locale: ${lang}`);
       this.translations[lang] = await response.json();
       this.currentLang = lang;
