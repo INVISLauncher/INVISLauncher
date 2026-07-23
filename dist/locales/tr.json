@@ -1,0 +1,112 @@
+{
+  "nav": {
+    "features": "Özellikler",
+    "showcase": "Ekran Görüntüleri",
+    "download": "İndir",
+    "faq": "SSS",
+    "downloadBtn": "GitHub'dan İndir"
+  },
+  "hero": {
+    "badge": "⚡ Sürüm v2.3.1 Yayınlandı • Minecraft Launcher",
+    "title": "Sadeliğin ve Kontrolün Adresi:",
+    "titleHighlight": "INVIS Launcher",
+    "subtitle": "Modrinth & CurseForge entegrasyonu, hızlı paket oluşturma ve özelleştirilebilir temalar sunan sade Minecraft istemcisi.",
+    "downloadForWin": "Windows İçin İndir (.exe)",
+    "exploreFeatures": "Arayüzü İncele",
+    "versionInfo": "v2.3.1 • Ücretsiz & Reklamsız",
+    "githubReleaseNote": "GitHub Releases Üzerinden Güvenle İndirin"
+  },
+  "features": {
+    "tagline": "SADE VE KULLANIŞLI",
+    "title": "INVIS Launcher Özellikleri",
+    "subtitle": "Gereksiz karmaşıklıktan uzak, oyununuzu kolayca yönetmeniz için tasarlandı.",
+    "card1Title": "Hızlı & Hafif İstemci",
+    "card1Desc": "Sisteminizi yormayan, hızlı açılan ve arka planda gereksiz kaynak tüketmeyen temiz altyapı.",
+    "card2Title": "Modrinth & CurseForge Entegrasyonu",
+    "card2Desc": "Yüzlerce mod, shader ve kaynak paketine arayüz içinden kolayca erişin ve yönetin.",
+    "card3Title": "Özel Paket Oluşturucu",
+    "card3Desc": "Minecraft sürümünüzü, Fabric veya Vanilla yükleyicinizi ve RAM miktarınızı tek ekrandan belirleyin.",
+    "card4Title": "Çeşitli Tema Seçenekleri",
+    "card4Desc": "Karanlık, Aydınlık, OLED ve Sistemle Eşle temaları arasında dilediğiniz gibi geçiş yapın.",
+    "card5Title": "Sıfır Reklam",
+    "card5Desc": "Can sıkıcı reklamlar veya gereksiz pencereler yok. Doğrudan oyununuza odaklanın.",
+    "card6Title": "Gelişmiş Dosya ve Java Yönetimi",
+    "card6Desc": "Mod, shader ve dille ilgili dosyalarınızı kolayca listeleyin, aktifleştirin veya silin."
+  },
+  "showcase": {
+    "tagline": "GERÇEK ARAYÜZ GÖRÜNTÜLERİ",
+    "title": "INVIS Launcher Ekran Görüntüleri",
+    "subtitle": "Birebir uygulama içi ekran görüntüleriyle launcher arayüzünü keşfedin.",
+    "tabFiles": "Dosyalar & Modlar",
+    "tabExplore": "Keşfet (Modrinth)",
+    "tabSettings": "Ayarlar & Temalar",
+    "tabNewPack": "Yeni Paket Oluştur",
+    "sliderTitle": "Arayüz Galeri Slaytı",
+    "prevSlide": "Önceki",
+    "nextSlide": "Sonraki"
+  },
+  "download": {
+    "tagline": "HEMEN İNDİRİN",
+    "title": "INVIS Launcher v2.3.1",
+    "subtitle": "GitHub Releases üzerinden en güncel Windows installer veya portable sürümünü indirin.",
+    "cardTitle": "INVIS Launcher v2.3.1",
+    "winButton": "GitHub'dan EXE İndir",
+    "fileSize": "Destek: Windows 10 / 11 (64-bit)",
+    "sha256": "GitHub Üzerinde Doğrulanmış",
+    "changelogBtn": "Değişiklik Günlüğü",
+    "sysReqTitle": "Sistem Gereksinimleri",
+    "sysReqOS": "Windows 10 / 11 64-bit",
+    "sysReqRAM": "Minecraft İçin Yeterli RAM",
+    "sysReqDisk": "Hafif Kurulum (~100MB)"
+  },
+  "faq": {
+    "tagline": "MERAK EDİLENLER",
+    "title": "Sıkça Sorulan Sorular",
+    "subtitle": "INVIS Launcher ve indirme süreci hakkında temel sorular.",
+    "q1": "INVIS Launcher ücretsiz mi?",
+    "a1": "Evet, INVIS Launcher tamamen ücretsizdir ve içerisinde hiçbir reklam barındırmaz.",
+    "q2": "İndirme işlemi nasıl gerçekleşiyor?",
+    "a2": "İndir butonuna tıkladığınızda doğrudan güvenli GitHub Releases sayfasına yönlendirilirsiniz ve en son .exe dosyasını indirebilirsiniz.",
+    "q3": "Mod ve Shader paketlerini nasıl eklerim?",
+    "a3": "Launcher içerisindeki 'Keşfet' sekmesinden Modrinth veya CurseForge üzerindeki modları tek tıkla inceleyebilir ve 'Dosyalar' kısmından aktifleştirebilirsiniz.",
+    "q4": "Farklı tema seçenekleri var mı?",
+    "a4": "Evet! Ayarlar menüsünden Karanlık, Aydınlık, OLED ve Sistemle Eşle temalarından dilediğinizi seçebilirsiniz.",
+    "q5": "Java sürümleri nasıl ayarlanır?",
+    "a5": "Launcher sisteminizdeki Java yollarını (örneğin Java 25) otomatik algılar veya Ayarlar kısmından manuel yol belirlemenize imkan tanır."
+  },
+  "legal": {
+    "privacyTitle": "Gizlilik Politikası",
+    "termsTitle": "Kullanım Koşulları",
+    "backToHome": "← Ana Sayfaya Dön",
+    "lastUpdated": "Son Güncelleme: Temmuz 2026",
+    "privacyP1": "INVIS Launcher olarak gizliliğinize önem veriyoruz.",
+    "privacyH1": "1. Veri Toplama",
+    "privacyP2": "INVIS Launcher kişisel verilerinizi, tarama geçmişinizi veya şifrelerinizi toplamaz.",
+    "privacyH2": "2. Yerel Depolama",
+    "privacyP3": "Oyun paketleriniz ve tema tercihleriniz bilgisayarınızda yerel olarak saklanır.",
+    "termsP1": "INVIS Launcher'ı kullanarak aşağıdaki kullanım koşullarını kabul etmiş olursunuz.",
+    "termsH1": "1. Kullanım Amacı",
+    "termsP2": "INVIS Launcher, kullanıcıların Minecraft oyun deneyimini kolaylaştırmak için tasarlanmış bağımsız bir arayüzdür.",
+    "termsH2": "2. Sorumluluk Reddi",
+    "termsP3": "Yazılım olduğu gibi sunulmaktadır. İndirdiğiniz 3. taraf modlar tamamen kullanıcı sorumluluğundadır."
+  },
+  "changelog": {
+    "modalTitle": "Sürüm Notları - v2.3.1",
+    "v241": "Sürüm v2.3.1",
+    "v241_1": "Modrinth & CurseForge arama performansında iyileştirmeler",
+    "v241_2": "OLED ve Aydınlık tema seçeneği düzeltmeleri",
+    "v241_3": "Java konum algılama güncellemeleri",
+    "v240": "Sürüm v2.3.0",
+    "v240_1": "Yeni Paket Oluşturucu ekranı eklendi",
+    "v240_2": "Sınırsız mod ve shader yönetimi",
+    "closeBtn": "Kapat"
+  },
+  "footer": {
+    "desc": "Modrinth ve CurseForge destekli, reklamsız ve hafif Minecraft istemcisi.",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Kullanım Koşulları",
+    "github": "GitHub Sayfası",
+    "discord": "Discord Topluluğu",
+    "copyright": "© 2026 INVIS Launcher. Tüm hakları saklıdır."
+  }
+}

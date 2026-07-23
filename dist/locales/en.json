@@ -1,0 +1,112 @@
+{
+  "nav": {
+    "features": "Features",
+    "showcase": "Screenshots",
+    "download": "Download",
+    "faq": "FAQ",
+    "downloadBtn": "Download from GitHub"
+  },
+  "hero": {
+    "badge": "⚡ Version v2.3.1 Released • Minecraft Launcher",
+    "title": "Simplicity and Control Combined:",
+    "titleHighlight": "INVIS Launcher",
+    "subtitle": "A clean, lightweight Minecraft launcher featuring Modrinth & CurseForge integration, package builder, and custom themes.",
+    "downloadForWin": "Download for Windows (.exe)",
+    "exploreFeatures": "Explore Interface",
+    "versionInfo": "v2.3.1 • Free & Ad-Free",
+    "githubReleaseNote": "Download safely via GitHub Releases"
+  },
+  "features": {
+    "tagline": "CLEAN & FUNCTIONAL",
+    "title": "INVIS Launcher Features",
+    "subtitle": "Designed to manage your Minecraft modpacks easily without any bloatware.",
+    "card1Title": "Lightweight & Fast Client",
+    "card1Desc": "Engineered to launch quickly with minimal memory footprint and zero background bloat.",
+    "card2Title": "Modrinth & CurseForge Integration",
+    "card2Desc": "Browse, search, and manage hundreds of mods, shaders, and resource packs directly inside the client.",
+    "card3Title": "Custom Package Builder",
+    "card3Desc": "Configure your Minecraft version, Vanilla or Fabric loader, and RAM memory limit in seconds.",
+    "card4Title": "Multiple Theme Options",
+    "card4Desc": "Seamlessly switch between Dark, Light, OLED, and System default visual themes.",
+    "card5Title": "Zero Advertisements",
+    "card5Desc": "No annoying ads or popups. Just pure Minecraft gameplay focus.",
+    "card6Title": "Advanced File & Java Management",
+    "card6Desc": "Easily toggle, remove, or configure your mods, shaders, and Java runtime paths."
+  },
+  "showcase": {
+    "tagline": "REAL INTERFACE SCREENSHOTS",
+    "title": "INVIS Launcher In Action",
+    "subtitle": "Explore actual screenshots of INVIS Launcher in operation.",
+    "tabFiles": "Files & Mods",
+    "tabExplore": "Explore (Modrinth)",
+    "tabSettings": "Settings & Themes",
+    "tabNewPack": "New Package Builder",
+    "sliderTitle": "Interface Screenshot Gallery",
+    "prevSlide": "Previous",
+    "nextSlide": "Next"
+  },
+  "download": {
+    "tagline": "GET STARTED NOW",
+    "title": "INVIS Launcher v2.3.1",
+    "subtitle": "Download the latest Windows installer directly from official GitHub Releases.",
+    "cardTitle": "INVIS Launcher v2.3.1",
+    "winButton": "Download EXE from GitHub",
+    "fileSize": "Support: Windows 10 / 11 (64-bit)",
+    "sha256": "Verified on GitHub Releases",
+    "changelogBtn": "Changelog Notes",
+    "sysReqTitle": "System Requirements",
+    "sysReqOS": "Windows 10 / 11 64-bit",
+    "sysReqRAM": "Sufficient RAM for Minecraft",
+    "sysReqDisk": "Lightweight (~100MB)"
+  },
+  "faq": {
+    "tagline": "FREQUENTLY ASKED",
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about INVIS Launcher.",
+    "q1": "Is INVIS Launcher free?",
+    "a1": "Yes, INVIS Launcher is 100% free and contains zero advertisements.",
+    "q2": "How does downloading work?",
+    "a2": "Clicking download takes you directly to the official GitHub Releases page where you can download the latest installer.",
+    "q3": "How do I add mods and shaders?",
+    "a3": "Use the 'Explore' tab in the launcher to browse Modrinth & CurseForge mods, and manage them inside the 'Files' tab.",
+    "q4": "Are there different themes available?",
+    "a4": "Yes! You can choose between Dark, Light, OLED, and System Match themes in Settings.",
+    "q5": "How are Java versions configured?",
+    "a5": "The launcher auto-detects installed Java paths on your PC and allows custom path configuration in Settings."
+  },
+  "legal": {
+    "privacyTitle": "Privacy Policy",
+    "termsTitle": "Terms of Service",
+    "backToHome": "← Back to Main Page",
+    "lastUpdated": "Last updated: July 2026",
+    "privacyP1": "At INVIS Launcher, we respect your privacy.",
+    "privacyH1": "1. Data Collection",
+    "privacyP2": "INVIS Launcher does NOT collect personal data, browsing history, or user credentials.",
+    "privacyH2": "2. Local Storage",
+    "privacyP3": "All game profiles and settings are stored locally on your machine.",
+    "termsP1": "By using INVIS Launcher, you agree to these terms.",
+    "termsH1": "1. Purpose of Use",
+    "termsP2": "INVIS Launcher is an independent client designed to enhance your Minecraft gaming experience.",
+    "termsH2": "2. Disclaimer",
+    "termsP3": "The software is provided AS IS. Third-party mods installed by users are at their own responsibility."
+  },
+  "changelog": {
+    "modalTitle": "Release Notes - v2.3.1",
+    "v241": "Version v2.3.1",
+    "v241_1": "Modrinth & CurseForge search speed optimizations",
+    "v241_2": "Fixed OLED & Light theme color palette rendering",
+    "v241_3": "Updated Java path auto-detection",
+    "v240": "Version v2.3.0",
+    "v240_1": "Added New Package Builder modal",
+    "v240_2": "Mod, shader, and resource pack management",
+    "closeBtn": "Close"
+  },
+  "footer": {
+    "desc": "Clean, ad-free Minecraft launcher with Modrinth and CurseForge support.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "github": "GitHub Repository",
+    "discord": "Discord Community",
+    "copyright": "© 2026 INVIS Launcher. All rights reserved."
+  }
+}
