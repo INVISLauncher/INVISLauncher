@@ -8,8 +8,8 @@
   <link rel="icon" type="image/jpeg" href="./assets/logo.jpg" />
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <script type="module" crossorigin src="./assets/index-CebdCfWS.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-Cip40y0G.css">
+  <script type="module" crossorigin src="./assets/index-DoNAgUtM.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-B43bU4i6.css">
 </head>
 <body>
 
@@ -37,16 +37,16 @@
       </nav>
 
       <div class="nav-actions">
-        <!-- Language Switcher -->
+        <!-- Language Switcher Dropdown (Opens ONLY on Click) -->
         <div class="lang-dropdown">
-          <button class="lang-btn" id="langDropdownBtn">
+          <button class="lang-btn" id="langDropdownBtn" type="button">
             <i class="fa-solid fa-globe"></i>
             <span id="currentLangLabel">TR</span>
             <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i>
           </button>
-          <div class="lang-menu">
-            <button class="lang-opt" data-lang="tr">🇹🇷 Türkçe</button>
-            <button class="lang-opt" data-lang="en">🇺🇸 English</button>
+          <div class="lang-menu" id="langMenu">
+            <button class="lang-opt" data-lang="tr" type="button">🇹🇷 Türkçe</button>
+            <button class="lang-opt" data-lang="en" type="button">🇺🇸 English</button>
           </div>
         </div>
 
@@ -193,16 +193,16 @@
 
           <!-- Tabs -->
           <div class="preview-tabs">
-            <button class="tab-btn active" data-tab="tab-files">
+            <button class="tab-btn active" data-tab="tab-files" type="button">
               <i class="fa-solid fa-folder-open"></i> <span data-i18n="showcase.tabFiles">Dosyalar & Modlar</span>
             </button>
-            <button class="tab-btn" data-tab="tab-explore">
+            <button class="tab-btn" data-tab="tab-explore" type="button">
               <i class="fa-solid fa-compass"></i> <span data-i18n="showcase.tabExplore">Keşfet (Modrinth)</span>
             </button>
-            <button class="tab-btn" data-tab="tab-settings">
+            <button class="tab-btn" data-tab="tab-settings" type="button">
               <i class="fa-solid fa-gear"></i> <span data-i18n="showcase.tabSettings">Ayarlar & Temalar</span>
             </button>
-            <button class="tab-btn" data-tab="tab-newpack">
+            <button class="tab-btn" data-tab="tab-newpack" type="button">
               <i class="fa-solid fa-plus"></i> <span data-i18n="showcase.tabNewPack">Yeni Paket Oluştur</span>
             </button>
           </div>
@@ -255,14 +255,14 @@
           </div>
 
           <div class="slider-controls">
-            <button class="slider-btn" id="prevSlideBtn" aria-label="Previous Slide"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="slider-btn" id="prevSlideBtn" aria-label="Previous Slide" type="button"><i class="fa-solid fa-chevron-left"></i></button>
             <div class="slider-dots" id="sliderDots">
               <span class="slider-dot active" data-index="0"></span>
               <span class="slider-dot" data-index="1"></span>
               <span class="slider-dot" data-index="2"></span>
               <span class="slider-dot" data-index="3"></span>
             </div>
-            <button class="slider-btn" id="nextSlideBtn" aria-label="Next Slide"><i class="fa-solid fa-chevron-right"></i></button>
+            <button class="slider-btn" id="nextSlideBtn" aria-label="Next Slide" type="button"><i class="fa-solid fa-chevron-right"></i></button>
           </div>
         </div>
 
@@ -287,7 +287,7 @@
           <div class="download-meta">
             <span class="meta-pill" data-i18n="download.fileSize">Destek: Windows 10 / 11 (64-bit)</span>
             <span class="meta-pill"><i class="fa-solid fa-shield-halved" style="color:var(--emerald-primary);"></i> <span data-i18n="download.sha256">GitHub Üzerinde Doğrulanmış</span></span>
-            <button class="btn-secondary" id="openChangelogBtn" style="padding:6px 16px; font-size:0.85rem;" data-i18n="download.changelogBtn">
+            <button class="btn-secondary" id="openChangelogBtn" style="padding:6px 16px; font-size:0.85rem;" data-i18n="download.changelogBtn" type="button">
               Değişiklik Günlüğü
             </button>
           </div>
@@ -330,6 +330,14 @@
           </div>
 
           <form id="feedbackForm" class="feedback-form">
+            <!-- User Email Field -->
+            <div class="form-group">
+              <label for="fbEmail" data-i18n="feedback.emailLabel">E-Posta Adresiniz</label>
+              <div class="input-wrapper">
+                <input type="email" id="fbEmail" required placeholder="ornek@domain.com" data-i18n="feedback.emailPlaceholder" />
+              </div>
+            </div>
+
             <!-- Subject Field -->
             <div class="form-group">
               <label for="fbSubject" data-i18n="feedback.subjectLabel">Konu / Başlık</label>
@@ -360,7 +368,7 @@
             <!-- Alert / Status Banner -->
             <div class="form-alert" id="formAlert"></div>
 
-            <button type="submit" class="btn-primary btn-large" style="width:100%; justify-content:center;">
+            <button type="submit" id="submitFeedbackBtn" class="btn-primary btn-large" style="width:100%; justify-content:center;">
               <i class="fa-solid fa-paper-plane"></i>
               <span data-i18n="feedback.submitBtn">Geri Bildirimi Gönder</span>
             </button>
@@ -441,7 +449,7 @@
     <div class="modal-box">
       <div class="modal-header">
         <h3 style="font-family:var(--font-heading); font-size:1.3rem;" data-i18n="changelog.modalTitle">Sürüm Notları - v2.3.1</h3>
-        <button class="modal-close" id="closeChangelogBtn">&times;</button>
+        <button class="modal-close" id="closeChangelogBtn" type="button">&times;</button>
       </div>
       <div>
         <div class="changelog-version" data-i18n="changelog.v241">Sürüm v2.3.1</div>
@@ -458,7 +466,7 @@
         </ul>
       </div>
       <div style="margin-top:24px; text-align:right;">
-        <button class="btn-secondary" id="closeChangelogBtn2" data-i18n="changelog.closeBtn">Kapat</button>
+        <button class="btn-secondary" id="closeChangelogBtn2" data-i18n="changelog.closeBtn" type="button">Kapat</button>
       </div>
     </div>
   </div>
@@ -466,7 +474,7 @@
   <!-- DEDICATED PRIVACY POLICY PAGE VIEW -->
   <div class="legal-view" id="privacyView">
     <div class="legal-container">
-      <button class="legal-back-btn backFromLegalBtn" data-i18n="legal.backToHome">← Ana Sayfaya Dön</button>
+      <button class="legal-back-btn backFromLegalBtn" data-i18n="legal.backToHome" type="button">← Ana Sayfaya Dön</button>
       <h1 class="legal-title" data-i18n="legal.privacyTitle">Gizlilik Politikası</h1>
       <div class="legal-date" data-i18n="legal.lastUpdated">Son Güncelleme: Temmuz 2026</div>
 
@@ -491,7 +499,7 @@
   <!-- DEDICATED TERMS OF SERVICE PAGE VIEW -->
   <div class="legal-view" id="termsView">
     <div class="legal-container">
-      <button class="legal-back-btn backFromLegalBtn" data-i18n="legal.backToHome">← Ana Sayfaya Dön</button>
+      <button class="legal-back-btn backFromLegalBtn" data-i18n="legal.backToHome" type="button">← Ana Sayfaya Dön</button>
       <h1 class="legal-title" data-i18n="legal.termsTitle">Kullanım Koşulları</h1>
       <div class="legal-date" data-i18n="legal.lastUpdated">Son Güncelleme: Temmuz 2026</div>
 
@@ -543,8 +551,8 @@
           <ul class="footer-links">
             <li><a href="https://github.com/INVISLauncher/invislauncher" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> <span data-i18n="footer.github">GitHub Sayfası</span></a></li>
             <li><a href="https://discord.com" target="_blank" rel="noopener"><i class="fa-brands fa-discord"></i> <span data-i18n="footer.discord">Discord Topluluğu</span></a></li>
-            <li><button id="openPrivacyFooterBtn" data-i18n="footer.privacy">Gizlilik Politikası</button></li>
-            <li><button id="openTermsFooterBtn" data-i18n="footer.terms">Kullanım Koşulları</button></li>
+            <li><button id="openPrivacyFooterBtn" data-i18n="footer.privacy" type="button">Gizlilik Politikası</button></li>
+            <li><button id="openTermsFooterBtn" data-i18n="footer.terms" type="button">Kullanım Koşulları</button></li>
           </ul>
         </div>
       </div>

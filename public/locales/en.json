@@ -65,16 +65,21 @@
     "title": "Feedback & Bug Report",
     "subtitle": "Help us improve INVIS Launcher. Send bug reports or feature suggestions directly to our team.",
     "directEmailLabel": "Direct Email Contact:",
+    "emailLabel": "Your Email Address",
+    "emailPlaceholder": "example@domain.com",
     "subjectLabel": "Subject / Title",
     "subjectPlaceholder": "E.g. Fabric mod list loading issue...",
     "descLabel": "Description & Details",
     "descPlaceholder": "Describe the issue or suggestion in detail...",
     "captchaLabel": "Security Verification",
     "submitBtn": "Send Feedback",
+    "sendingBtn": "Sending...",
     "maxLimitError": "You have reached the limit of 3 feedback submissions per 24 hours. Please try again later.",
     "captchaError": "Security verification answer is incorrect! Please try again.",
+    "emailError": "Please enter a valid email address.",
     "minCharError": "Please enter a subject of at least 5 chars and description of 15 chars.",
-    "successMsg": "Thank you for your feedback! Preparing your email client..."
+    "successMsg": "✅ Your feedback has been successfully sent to invislauncher@gmail.com! Thank you.",
+    "fallbackMsg": "⚠️ Connection error. Click below to send via your email client."
   },
   "faq": {
     "tagline": "FREQUENTLY ASKED",

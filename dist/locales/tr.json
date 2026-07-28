@@ -65,16 +65,21 @@
     "title": "Geri Bildirim & Hata Bildirimi",
     "subtitle": "INVIS Launcher'ı geliştirmemize yardımcı olun. Karşılaştığınız hataları veya önerilerinizi doğrudan ekibimize iletin.",
     "directEmailLabel": "Doğrudan E-Posta:",
+    "emailLabel": "E-Posta Adresiniz",
+    "emailPlaceholder": "ornek@domain.com",
     "subjectLabel": "Konu / Başlık",
     "subjectPlaceholder": "Örn: Fabric mod listesi yükleme hatası...",
     "descLabel": "Açıklama & Detaylar",
     "descPlaceholder": "Karşılaştığınız hatayı veya önerinizi detaylıca açıklayın...",
     "captchaLabel": "Güvenlik Doğrulaması",
     "submitBtn": "Geri Bildirimi Gönder",
+    "sendingBtn": "Gönderiliyor...",
     "maxLimitError": "Son 24 saat içinde maksimum 3 geri bildirim gönderme hakkınızı doldurdunuz. Lütfen daha sonra tekrar deneyin.",
     "captchaError": "Güvenlik doğrulaması cevabı hatalı! Lütfen tekrar deneyin.",
+    "emailError": "Lütfen geçerli bir e-posta adresi girin.",
     "minCharError": "Lütfen en az 5 karakterlik konu ve 15 karakterlik açıklama yazın.",
-    "successMsg": "Geri bildiriminiz için teşekkürler! E-posta istemciniz hazırlanıyor..."
+    "successMsg": "✅ Geri bildiriminiz başarıyla ekibimize (invislauncher@gmail.com) iletildi! Teşekkür ederiz.",
+    "fallbackMsg": "⚠️ İnternet bağlantısı kesildi. E-posta uygulamanızla göndermek için aşağıdaki butona tıklayın."
   },
   "faq": {
     "tagline": "MERAK EDİLENLER",
