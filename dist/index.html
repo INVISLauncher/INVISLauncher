@@ -8,7 +8,7 @@
   <link rel="icon" type="image/jpeg" href="./assets/logo.jpg" />
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <script type="module" crossorigin src="./assets/index-DoNAgUtM.js"></script>
+  <script type="module" crossorigin src="./assets/index-BRVEzNJe.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-B43bU4i6.css">
 </head>
 <body>
@@ -17,7 +17,7 @@
   <div class="bg-glow-orb orb-top-left"></div>
   <div class="bg-glow-orb orb-center-right"></div>
 
-  <!-- STICKY NAVBAR -->
+  <!-- STICKY NAVBAR WITH ACCURATE SCROLLSPY LINKS -->
   <header class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="#hero" class="brand-logo">
@@ -27,8 +27,7 @@
 
       <nav>
         <ul class="nav-links">
-          <li><a href="#hero" class="nav-link active" data-i18n="nav.features">Özellikler</a></li>
-          <li><a href="#features" class="nav-link" data-i18n="nav.features">Özellikler</a></li>
+          <li><a href="#features" class="nav-link active" data-i18n="nav.features">Özellikler</a></li>
           <li><a href="#showcase" class="nav-link" data-i18n="nav.showcase">Ekran Görüntüleri</a></li>
           <li><a href="#download" class="nav-link" data-i18n="nav.download">İndir</a></li>
           <li><a href="#feedback" class="nav-link" data-i18n="nav.feedback">Geri Bildirim</a></li>
@@ -37,8 +36,8 @@
       </nav>
 
       <div class="nav-actions">
-        <!-- Language Switcher Dropdown (Opens ONLY on Click) -->
-        <div class="lang-dropdown">
+        <!-- Language Switcher Dropdown (Supports BOTH Click & Hover) -->
+        <div class="lang-dropdown" id="langDropdown">
           <button class="lang-btn" id="langDropdownBtn" type="button">
             <i class="fa-solid fa-globe"></i>
             <span id="currentLangLabel">TR</span>
@@ -538,7 +537,7 @@
         <div class="footer-col">
           <h4>Navigasyon</h4>
           <ul class="footer-links">
-            <li><a href="#hero" data-i18n="nav.features">Özellikler</a></li>
+            <li><a href="#features" data-i18n="nav.features">Özellikler</a></li>
             <li><a href="#showcase" data-i18n="nav.showcase">Ekran Görüntüleri</a></li>
             <li><a href="#download" data-i18n="nav.download">İndir</a></li>
             <li><a href="#feedback" data-i18n="nav.feedback">Geri Bildirim</a></li>

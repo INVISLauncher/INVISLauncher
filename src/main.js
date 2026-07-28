@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Re-bind images if i18n re-renders
   bindImages();
 
-  // 1b. Language Dropdown Click Toggle Controller (No Hover!)
+  // 1b. Language Dropdown Trigger (Click & Touch)
   const langDropdownBtn = document.getElementById('langDropdownBtn');
   const langMenu = document.getElementById('langMenu');
 
@@ -54,30 +54,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // 2. Sticky Navbar & Scroll Progress Effect
-  const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 40) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
+  // Bind language option buttons
+  document.querySelectorAll('.lang-opt').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const lang = e.currentTarget.getAttribute('data-lang');
+      if (lang) {
+        i18n.loadLanguage(lang);
+        if (langMenu) langMenu.classList.remove('open');
+      }
+    });
   });
 
-  // Active section nav link highlight via IntersectionObserver
+  // 2. Sticky Navbar & Reliable ScrollSpy Highlight
+  const navbar = document.getElementById('navbar');
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-link');
 
-  const observerOptions = {
-    root: null,
-    rootMargin: '-20% 0px -60% 0px',
-    threshold: 0
-  };
+  function updateScrollSpy() {
+    if (window.scrollY > 40) {
+      if (navbar) navbar.classList.add('scrolled');
+    } else {
+      if (navbar) navbar.classList.remove('scrolled');
+    }
 
-  const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const id = entry.target.getAttribute('id');
+    const scrollPos = window.scrollY + 200;
+
+    sections.forEach((section) => {
+      const top = section.offsetTop;
+      const height = section.offsetHeight;
+      const id = section.getAttribute('id');
+
+      if (scrollPos >= top && scrollPos < top + height) {
         navLinks.forEach((link) => {
           if (link.getAttribute('href') === `#${id}`) {
             link.classList.add('active');
@@ -87,9 +95,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
       }
     });
-  }, observerOptions);
+  }
 
-  sections.forEach((section) => sectionObserver.observe(section));
+  window.addEventListener('scroll', updateScrollSpy);
+  updateScrollSpy();
 
   // 3. Scroll Reveal Animation
   const revealElements = document.querySelectorAll('.reveal-on-scroll');
