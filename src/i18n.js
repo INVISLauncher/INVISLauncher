@@ -1,37 +1,32 @@
 /**
  * i18n Internationalization Engine for INVIS Launcher Website
- * Supports EN (English) and TR (Türkçe)
+ * Bundles JSON locales directly with zero runtime fetch dependencies!
  */
+import trDict from '../public/locales/tr.json';
+import enDict from '../public/locales/en.json';
 
 export class I18nEngine {
   constructor() {
-    this.currentLang = localStorage.getItem('invis_lang') || 'tr'; // Default to Turkish or user preference
-    this.translations = {};
+    this.currentLang = localStorage.getItem('invis_lang') || 'tr';
+    this.translations = {
+      tr: trDict,
+      en: enDict
+    };
   }
 
   async init() {
-    await this.loadLanguage(this.currentLang);
+    this.applyTranslations();
     this.setupListeners();
   }
 
-  async loadLanguage(lang) {
-    try {
-      // Use relative path for GitHub Pages compatibility
-      let response = await fetch(`./locales/${lang}.json`);
-      if (!response.ok) {
-        response = await fetch(`locales/${lang}.json`);
-      }
-      if (!response.ok) throw new Error(`Failed to load locale: ${lang}`);
-      this.translations[lang] = await response.json();
+  loadLanguage(lang) {
+    if (this.translations[lang]) {
       this.currentLang = lang;
       localStorage.setItem('invis_lang', lang);
       this.applyTranslations();
       document.documentElement.lang = lang;
 
-      // Dispatch custom event for UI updates
       window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
-    } catch (err) {
-      console.error('i18n loading error:', err);
     }
   }
 
@@ -52,7 +47,6 @@ export class I18nEngine {
       }
     });
 
-    // Update active state in language selector UI
     const langBtns = document.querySelectorAll('.lang-opt');
     langBtns.forEach((btn) => {
       if (btn.getAttribute('data-lang') === this.currentLang) {

@@ -113,16 +113,11 @@ body {
   background: radial-gradient(circle, var(--cyan-accent), transparent 70%);
 }
 
-/* Scroll Reveal Animation */
+/* Scroll Reveal Animation - Safe default opacity 1 */
 .reveal-on-scroll {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.reveal-on-scroll.revealed {
   opacity: 1;
   transform: translateY(0);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ==========================================================================
@@ -136,13 +131,9 @@ body {
   height: 80px;
   z-index: 1000;
   transition: var(--transition-smooth);
-}
-
-.navbar.scrolled {
   background: rgba(7, 10, 17, 0.85);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-glass);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .nav-container {
@@ -171,6 +162,7 @@ body {
   object-fit: cover;
   box-shadow: 0 0 15px var(--emerald-glow);
   transition: var(--transition-smooth);
+  display: inline-block;
 }
 
 .brand-logo:hover .logo-img {
@@ -791,7 +783,7 @@ body {
 }
 
 /* ==========================================================================
-   FEEDBACK & BUG REPORT SECTION (REDESIGNED DARK GLASS UI)
+   FEEDBACK & BUG REPORT SECTION (PREMIUM DARK GLASS UI)
    ========================================================================== */
 .feedback {
   padding: 100px 0;
@@ -801,12 +793,12 @@ body {
 .feedback-card {
   max-width: 680px;
   margin: 0 auto;
-  background: rgba(12, 18, 30, 0.85);
-  backdrop-filter: blur(16px);
+  background: rgba(12, 18, 30, 0.92) !important;
+  backdrop-filter: blur(20px);
   border: 1px solid var(--border-glow);
   border-radius: var(--radius-lg);
   padding: 40px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(0, 255, 136, 0.12);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 255, 136, 0.15);
   position: relative;
 }
 
@@ -860,9 +852,9 @@ body {
 }
 
 .form-group input, .form-group textarea {
-  width: 100%;
-  background: rgba(15, 23, 42, 0.9) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  width: 100% !important;
+  background: rgba(7, 10, 17, 0.9) !important;
+  border: 1px solid rgba(0, 255, 136, 0.25) !important;
   border-radius: var(--radius-sm) !important;
   padding: 14px 16px !important;
   color: #F1F5F9 !important;
@@ -870,20 +862,21 @@ body {
   font-size: 0.95rem !important;
   transition: var(--transition-fast) !important;
   outline: none !important;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5) !important;
 }
 
 .form-group textarea {
-  padding-bottom: 32px !important;
+  padding-bottom: 36px !important;
   resize: vertical;
+  min-height: 120px;
 }
 
 .form-group input:focus, .form-group textarea:focus {
   border-color: var(--emerald-primary) !important;
-  box-shadow: 0 0 16px rgba(0, 255, 136, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), inset 0 2px 5px rgba(0, 0, 0, 0.5) !important;
 }
 
-/* Floating Character Counter Badge in Bottom Right Corner of Input */
+/* Floating Character Badge inside Bottom Right of Input */
 .char-badge {
   position: absolute;
   bottom: 10px;
@@ -891,8 +884,8 @@ body {
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--emerald-primary);
-  background: rgba(7, 10, 17, 0.85);
-  padding: 2px 8px;
+  background: rgba(12, 18, 30, 0.95);
+  padding: 3px 8px;
   border-radius: 6px;
   border: 1px solid rgba(0, 255, 136, 0.3);
   pointer-events: none;

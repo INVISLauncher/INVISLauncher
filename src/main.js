@@ -8,29 +8,36 @@ import realShot3 from './assets/real_shot3.png';
 import realShot4 from './assets/real_shot4.png';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 0. Bind Bundled Images to DOM
-  document.querySelectorAll('.logo-img').forEach((img) => {
-    img.src = logoImg;
-  });
-  const previewLogo = document.querySelector('.window-title img');
-  if (previewLogo) previewLogo.src = logoImg;
+  // 0. Bind Bundled Images Immediately to DOM
+  function bindImages() {
+    document.querySelectorAll('.logo-img').forEach((img) => {
+      img.src = logoImg;
+    });
+    const previewLogo = document.querySelector('.window-title img');
+    if (previewLogo) previewLogo.src = logoImg;
 
-  document.querySelectorAll('[data-shot="1"]').forEach((img) => {
-    img.src = realShot1;
-  });
-  document.querySelectorAll('[data-shot="2"]').forEach((img) => {
-    img.src = realShot2;
-  });
-  document.querySelectorAll('[data-shot="3"]').forEach((img) => {
-    img.src = realShot3;
-  });
-  document.querySelectorAll('[data-shot="4"]').forEach((img) => {
-    img.src = realShot4;
-  });
+    document.querySelectorAll('[data-shot="1"]').forEach((img) => {
+      img.src = realShot1;
+    });
+    document.querySelectorAll('[data-shot="2"]').forEach((img) => {
+      img.src = realShot2;
+    });
+    document.querySelectorAll('[data-shot="3"]').forEach((img) => {
+      img.src = realShot3;
+    });
+    document.querySelectorAll('[data-shot="4"]').forEach((img) => {
+      img.src = realShot4;
+    });
+  }
+
+  bindImages();
 
   // 1. Initialize Internationalization (i18n)
   const i18n = new I18nEngine();
   await i18n.init();
+
+  // Re-bind images if i18n re-renders
+  bindImages();
 
   // 2. Sticky Navbar & Scroll Progress Effect
   const navbar = document.getElementById('navbar');
@@ -69,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   sections.forEach((section) => sectionObserver.observe(section));
 
-  // 3. Scroll Reveal Animation for Sections & Cards
+  // 3. Scroll Reveal Animation
   const revealElements = document.querySelectorAll('.reveal-on-scroll');
   const revealObserver = new IntersectionObserver(
     (entries) => {
@@ -79,7 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       });
     },
-    { threshold: 0.12 }
+    { threshold: 0.1 }
   );
   revealElements.forEach((el) => revealObserver.observe(el));
 
@@ -174,7 +181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  // 7. Feedback Form & 24-Hour (Max 3 Submissions) Anti-Spam Protection Logic
+  // 7. Real Working Feedback Form & 24-Hour (Max 3 Submissions) Anti-Spam Protection
   const feedbackForm = document.getElementById('feedbackForm');
   const fbSubject = document.getElementById('fbSubject');
   const fbDesc = document.getElementById('fbDesc');
@@ -196,7 +203,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   generateCaptcha();
 
-  // Floating Character Badges inside Bottom Right of Input Fields
+  // Floating Character Counter Badges (e.g. 0/80, 0/1000)
   if (fbSubject && subjectCount) {
     fbSubject.addEventListener('input', () => {
       subjectCount.textContent = `${fbSubject.value.length}/80`;
@@ -215,7 +222,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!historyStr) return [];
       const history = JSON.parse(historyStr);
       const now = Date.now();
-      // Keep only timestamps from the last 24 hours (86,400,000 ms)
+      // Keep only timestamps within the last 24 hours (86,400,000 ms)
       return history.filter((ts) => now - ts < 86400000);
     } catch {
       return [];
@@ -223,7 +230,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   if (feedbackForm) {
-    feedbackForm.addEventListener('submit', (e) => {
+    feedbackForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const subjectVal = fbSubject.value.trim();
@@ -255,19 +262,45 @@ document.addEventListener('DOMContentLoaded', async () => {
       recentSubmissions.push(Date.now());
       localStorage.setItem('invis_feedback_history', JSON.stringify(recentSubmissions));
 
-      showFormAlert('Geri bildiriminiz için teşekkürler! E-posta istemciniz hazırlanıyor...', 'success');
+      showFormAlert('Geri bildiriminiz iletiliyor...', 'success');
 
-      // Open Mailto link
-      const mailUrl = `mailto:invislauncher@gmail.com?subject=${encodeURIComponent('[INVIS Geri Bildirim] ' + subjectVal)}&body=${encodeURIComponent(descVal)}`;
-      setTimeout(() => {
-        window.location.href = mailUrl;
-      }, 800);
+      // Send via Web3Forms API to invislauncher@gmail.com
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            access_key: 'a888c3a9-fb01-4475-9279-d1bf1e231e67', // Public Web3Forms endpoint key
+            to: 'invislauncher@gmail.com',
+            subject: `[INVIS Geri Bildirim] ${subjectVal}`,
+            message: descVal,
+            from_name: 'INVIS Launcher Website User'
+          })
+        });
+
+        if (response.ok) {
+          showFormAlert('Geri bildiriminiz başarıyla ekibimize iletildi! Teşekkür ederiz. 🚀', 'success');
+        } else {
+          // Fallback to mailto
+          openMailtoFallback(subjectVal, descVal);
+        }
+      } catch {
+        openMailtoFallback(subjectVal, descVal);
+      }
 
       feedbackForm.reset();
       if (subjectCount) subjectCount.textContent = '0/80';
       if (descCount) descCount.textContent = '0/1000';
       generateCaptcha();
     });
+  }
+
+  function openMailtoFallback(subjectVal, descVal) {
+    showFormAlert('E-posta istemciniz hazırlanıyor...', 'success');
+    const mailUrl = `mailto:invislauncher@gmail.com?subject=${encodeURIComponent('[INVIS Geri Bildirim] ' + subjectVal)}&body=${encodeURIComponent(descVal)}`;
+    setTimeout(() => {
+      window.location.href = mailUrl;
+    }, 600);
   }
 
   function showFormAlert(msg, type) {
@@ -340,7 +373,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (window.location.hash === '#privacy') showPrivacy();
   if (window.location.hash === '#terms') showTerms();
 
-  // 10. Animated Canvas Particle Mesh Background with Mouse Parallax Interaction
+  // 10. Animated Canvas Particle Mesh Background
   const canvas = document.getElementById('heroCanvas');
   if (canvas) {
     const ctx = canvas.getContext('2d');
