@@ -3,6 +3,7 @@
     "features": "Features",
     "showcase": "Screenshots",
     "download": "Download",
+    "feedback": "Feedback",
     "faq": "FAQ",
     "downloadBtn": "Download from GitHub"
   },
@@ -58,6 +59,22 @@
     "sysReqOS": "Windows 10 / 11 64-bit",
     "sysReqRAM": "Sufficient RAM for Minecraft",
     "sysReqDisk": "Lightweight (~100MB)"
+  },
+  "feedback": {
+    "tagline": "GET IN TOUCH",
+    "title": "Feedback & Bug Report",
+    "subtitle": "Help us improve INVIS Launcher. Send bug reports or feature suggestions directly to our team.",
+    "directEmailLabel": "Direct Email Contact:",
+    "subjectLabel": "Subject / Title (Max 80 Chars)",
+    "subjectPlaceholder": "E.g. Fabric mod list loading issue...",
+    "descLabel": "Description & Details (Max 1000 Chars)",
+    "descPlaceholder": "Describe the issue or suggestion in detail...",
+    "captchaLabel": "Security Verification (Spam Protection)",
+    "submitBtn": "Send Feedback",
+    "cooldownWarning": "Please wait 60 seconds before sending another message.",
+    "captchaError": "Security verification answer is incorrect! Please try again.",
+    "minCharError": "Please enter a subject of at least 5 chars and description of 15 chars.",
+    "successMsg": "Thank you for your feedback! Preparing your email client..."
   },
   "faq": {
     "tagline": "FREQUENTLY ASKED",

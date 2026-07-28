@@ -3,6 +3,7 @@
     "features": "Özellikler",
     "showcase": "Ekran Görüntüleri",
     "download": "İndir",
+    "feedback": "Geri Bildirim",
     "faq": "SSS",
     "downloadBtn": "GitHub'dan İndir"
   },
@@ -58,6 +59,22 @@
     "sysReqOS": "Windows 10 / 11 64-bit",
     "sysReqRAM": "Minecraft İçin Yeterli RAM",
     "sysReqDisk": "Hafif Kurulum (~100MB)"
+  },
+  "feedback": {
+    "tagline": "BİZE ULAŞIN",
+    "title": "Geri Bildirim & Hata Bildirimi",
+    "subtitle": "INVIS Launcher'ı geliştirmemize yardımcı olun. Karşılaştığınız hataları veya önerilerinizi doğrudan ekibimize iletin.",
+    "directEmailLabel": "Doğrudan E-Posta Adresimiz:",
+    "subjectLabel": "Konu / Başlık (Maks 80 Karakter)",
+    "subjectPlaceholder": "Örn: Fabric mod listesi yükleme hatası...",
+    "descLabel": "Açıklama & Detaylar (Maks 1000 Karakter)",
+    "descPlaceholder": "Karşılaştığınız hatayı veya önerinizi detaylıca açıklayın...",
+    "captchaLabel": "Güvenlik Doğrulaması (Spam Koruması)",
+    "submitBtn": "Geri Bildirimi Gönder",
+    "cooldownWarning": "Lütfen yeni bir mesaj göndermeden önce 60 saniye bekleyin.",
+    "captchaError": "Güvenlik doğrulaması cevabı hatalı! Lütfen tekrar deneyin.",
+    "minCharError": "Lütfen en az 5 karakterlik konu ve 15 karakterlik açıklama yazın.",
+    "successMsg": "Geri bildiriminiz için teşekkürler! E-posta istemciniz hazırlanıyor..."
   },
   "faq": {
     "tagline": "MERAK EDİLENLER",
