@@ -1,6 +1,33 @@
 import { I18nEngine } from './i18n.js';
 
+// Import images directly so Vite bundles them into hashed dist/assets URLs
+import logoImg from './assets/logo.jpg';
+import realShot1 from './assets/real_shot1.png';
+import realShot2 from './assets/real_shot2.png';
+import realShot3 from './assets/real_shot3.png';
+import realShot4 from './assets/real_shot4.png';
+
 document.addEventListener('DOMContentLoaded', async () => {
+  // 0. Bind Bundled Images to DOM
+  document.querySelectorAll('.logo-img').forEach((img) => {
+    img.src = logoImg;
+  });
+  const previewLogo = document.querySelector('.window-title img');
+  if (previewLogo) previewLogo.src = logoImg;
+
+  document.querySelectorAll('[data-shot="1"]').forEach((img) => {
+    img.src = realShot1;
+  });
+  document.querySelectorAll('[data-shot="2"]').forEach((img) => {
+    img.src = realShot2;
+  });
+  document.querySelectorAll('[data-shot="3"]').forEach((img) => {
+    img.src = realShot3;
+  });
+  document.querySelectorAll('[data-shot="4"]').forEach((img) => {
+    img.src = realShot4;
+  });
+
   // 1. Initialize Internationalization (i18n)
   const i18n = new I18nEngine();
   await i18n.init();
@@ -52,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       });
     },
-    { threshold: 0.15 }
+    { threshold: 0.12 }
   );
   revealElements.forEach((el) => revealObserver.observe(el));
 
@@ -147,7 +174,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  // 7. Feedback Form & Anti-Spam Protection Logic
+  // 7. Feedback Form & 24-Hour (Max 3 Submissions) Anti-Spam Protection Logic
   const feedbackForm = document.getElementById('feedbackForm');
   const fbSubject = document.getElementById('fbSubject');
   const fbDesc = document.getElementById('fbDesc');
@@ -169,20 +196,32 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   generateCaptcha();
 
-  // Character counters
+  // Floating Character Badges inside Bottom Right of Input Fields
   if (fbSubject && subjectCount) {
     fbSubject.addEventListener('input', () => {
-      subjectCount.textContent = `${fbSubject.value.length} / 80`;
+      subjectCount.textContent = `${fbSubject.value.length}/80`;
     });
   }
 
   if (fbDesc && descCount) {
     fbDesc.addEventListener('input', () => {
-      descCount.textContent = `${fbDesc.value.length} / 1000`;
+      descCount.textContent = `${fbDesc.value.length}/1000`;
     });
   }
 
-  // Form Submit Handler
+  function getRecentSubmissions() {
+    try {
+      const historyStr = localStorage.getItem('invis_feedback_history');
+      if (!historyStr) return [];
+      const history = JSON.parse(historyStr);
+      const now = Date.now();
+      // Keep only timestamps from the last 24 hours (86,400,000 ms)
+      return history.filter((ts) => now - ts < 86400000);
+    } catch {
+      return [];
+    }
+  }
+
   if (feedbackForm) {
     feedbackForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -191,16 +230,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       const descVal = fbDesc.value.trim();
       const userCaptcha = parseInt(fbCaptcha.value.trim(), 10);
 
-      // Check 60s Cooldown / Rate Limiter
-      const lastTime = localStorage.getItem('invis_last_feedback_time');
-      const now = Date.now();
-      if (lastTime && now - parseInt(lastTime, 10) < 60000) {
-        const remaining = Math.ceil((60000 - (now - parseInt(lastTime, 10))) / 1000);
-        showFormAlert(`Lütfen yeni bir mesaj göndermeden önce ${remaining} saniye bekleyin.`, 'error');
+      // Check 24-Hour Limit (Max 3 Submissions per 24 hours)
+      const recentSubmissions = getRecentSubmissions();
+      if (recentSubmissions.length >= 3) {
+        showFormAlert('Son 24 saat içinde maksimum 3 geri bildirim gönderme hakkınızı doldurdunuz. Lütfen daha sonra tekrar deneyin.', 'error');
         return;
       }
 
-      // Check Lengths
+      // Check Min Lengths
       if (subjectVal.length < 5 || descVal.length < 15) {
         showFormAlert('Lütfen en az 5 karakterlik konu ve 15 karakterlik açıklama yazın.', 'error');
         return;
@@ -214,21 +251,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      // Record Submission Time
-      localStorage.setItem('invis_last_feedback_time', Date.now().toString());
+      // Record Submission Timestamp
+      recentSubmissions.push(Date.now());
+      localStorage.setItem('invis_feedback_history', JSON.stringify(recentSubmissions));
 
-      showFormAlert('Geri bildiriminiz için teşekkürler! E-posta istemciniz açılıyor...', 'success');
+      showFormAlert('Geri bildiriminiz için teşekkürler! E-posta istemciniz hazırlanıyor...', 'success');
 
-      // Open mailto link formatted with subject and body
+      // Open Mailto link
       const mailUrl = `mailto:invislauncher@gmail.com?subject=${encodeURIComponent('[INVIS Geri Bildirim] ' + subjectVal)}&body=${encodeURIComponent(descVal)}`;
       setTimeout(() => {
         window.location.href = mailUrl;
       }, 800);
 
-      // Reset Form
       feedbackForm.reset();
-      if (subjectCount) subjectCount.textContent = '0 / 80';
-      if (descCount) descCount.textContent = '0 / 1000';
+      if (subjectCount) subjectCount.textContent = '0/80';
+      if (descCount) descCount.textContent = '0/1000';
       generateCaptcha();
     });
   }
@@ -241,7 +278,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     setTimeout(() => {
       if (type !== 'success') formAlert.style.display = 'none';
-    }, 6000);
+    }, 7000);
   }
 
   // 8. Changelog Modal Controller
@@ -344,7 +381,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         p.x += p.vx;
         p.y += p.vy;
 
-        // Repel gently from mouse cursor
         const dxMouse = p.x - mouse.x;
         const dyMouse = p.y - mouse.y;
         const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);

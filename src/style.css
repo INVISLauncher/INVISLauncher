@@ -8,8 +8,8 @@
 :root {
   --bg-primary: #070a11;
   --bg-secondary: #0c121e;
-  --bg-card: rgba(15, 23, 38, 0.65);
-  --bg-card-hover: rgba(22, 33, 54, 0.85);
+  --bg-card: rgba(15, 23, 38, 0.75);
+  --bg-card-hover: rgba(22, 33, 54, 0.9);
 
   --emerald-primary: #00FF88;
   --emerald-glow: rgba(0, 255, 136, 0.4);
@@ -465,7 +465,6 @@ body {
   position: relative;
   overflow: hidden;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
-  transform-style: preserve-3d;
 }
 
 .feature-card::before {
@@ -792,7 +791,7 @@ body {
 }
 
 /* ==========================================================================
-   FEEDBACK & BUG REPORT SECTION
+   FEEDBACK & BUG REPORT SECTION (REDESIGNED DARK GLASS UI)
    ========================================================================== */
 .feedback {
   padding: 100px 0;
@@ -800,15 +799,15 @@ body {
 }
 
 .feedback-card {
-  max-width: 760px;
+  max-width: 680px;
   margin: 0 auto;
-  background: var(--bg-card);
+  background: rgba(12, 18, 30, 0.85);
+  backdrop-filter: blur(16px);
   border: 1px solid var(--border-glow);
   border-radius: var(--radius-lg);
   padding: 40px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 255, 136, 0.1);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(0, 255, 136, 0.12);
   position: relative;
-  overflow: hidden;
 }
 
 .email-badge {
@@ -839,7 +838,7 @@ body {
 .feedback-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
 }
 
 .form-group {
@@ -849,39 +848,55 @@ body {
   text-align: left;
 }
 
-.form-label-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .form-group label {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-main);
 }
 
-.char-count {
-  font-size: 0.8rem;
-  color: var(--text-dim);
+.input-wrapper {
+  position: relative;
+  width: 100%;
 }
 
 .form-group input, .form-group textarea {
-  background: rgba(7, 10, 17, 0.8);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  color: var(--text-main);
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  transition: var(--transition-fast);
-  outline: none;
+  width: 100%;
+  background: rgba(15, 23, 42, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 14px 16px !important;
+  color: #F1F5F9 !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.95rem !important;
+  transition: var(--transition-fast) !important;
+  outline: none !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.form-group textarea {
+  padding-bottom: 32px !important;
+  resize: vertical;
 }
 
 .form-group input:focus, .form-group textarea:focus {
-  border-color: var(--emerald-primary);
-  box-shadow: 0 0 12px rgba(0, 255, 136, 0.2);
-  background: rgba(12, 18, 30, 0.95);
+  border-color: var(--emerald-primary) !important;
+  box-shadow: 0 0 16px rgba(0, 255, 136, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Floating Character Counter Badge in Bottom Right Corner of Input */
+.char-badge {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--emerald-primary);
+  background: rgba(7, 10, 17, 0.85);
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  pointer-events: none;
+  font-family: var(--font-heading);
 }
 
 .captcha-row {
@@ -909,6 +924,7 @@ body {
   font-size: 0.9rem;
   display: none;
   font-weight: 600;
+  line-height: 1.5;
 }
 
 .form-alert.success {

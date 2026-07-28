@@ -20,7 +20,7 @@
   <header class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="#hero" class="brand-logo">
-        <img src="./assets/logo.jpg" onerror="if(!this.dataset.tried){this.dataset.tried=1; this.src='./logo.jpg';}" alt="INVIS Logo" class="logo-img" />
+        <img src="./assets/logo.jpg" alt="INVIS Logo" class="logo-img" />
         <div class="logo-text">INVIS <span>Launcher</span></div>
       </a>
 
@@ -184,7 +184,7 @@
               <span class="dot dot-green"></span>
             </div>
             <div class="window-title">
-              <img src="./assets/logo.jpg" onerror="if(!this.dataset.tried){this.dataset.tried=1; this.src='./logo.jpg';}" style="width:18px; height:18px; border-radius:4px;" alt="INVIS Logo" />
+              <img src="./assets/logo.jpg" style="width:18px; height:18px; border-radius:4px;" alt="INVIS Logo" />
               INVIS Launcher v2.3.1 - Application Interface
             </div>
             <div style="font-size:0.8rem; color:var(--emerald-primary);"><i class="fa-solid fa-circle" style="font-size:8px;"></i> Active</div>
@@ -210,22 +210,22 @@
           <div class="preview-body">
             <!-- Files Tab -->
             <div class="tab-content active" id="tab-files">
-              <img src="./assets/real_shot1.png" onerror="if(!this.dataset.tried){this.dataset.tried=1; this.src='./real_shot1.png';}" alt="INVIS Launcher Dosyalar ve Mod Listesi" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
+              <img data-shot="1" src="./assets/real_shot1.png" alt="INVIS Launcher Dosyalar ve Mod Listesi" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
             </div>
 
             <!-- Explore Tab -->
             <div class="tab-content" id="tab-explore">
-              <img src="./assets/real_shot2.png" onerror="if(!this.dataset.tried){this.dataset.tried=1; this.src='./real_shot2.png';}" alt="INVIS Launcher Modrinth Keşfet" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
+              <img data-shot="2" src="./assets/real_shot2.png" alt="INVIS Launcher Modrinth Keşfet" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
             </div>
 
             <!-- Settings Tab -->
             <div class="tab-content" id="tab-settings">
-              <img src="./assets/real_shot3.png" onerror="if(!this.dataset.tried){this.dataset.tried=1; this.src='./real_shot3.png';}" alt="INVIS Launcher Ayarlar ve Tema" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
+              <img data-shot="3" src="./assets/real_shot3.png" alt="INVIS Launcher Ayarlar ve Tema" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
             </div>
 
             <!-- New Pack Modal Tab -->
             <div class="tab-content" id="tab-newpack">
-              <img src="./assets/real_shot4.png" onerror="if(!this.dataset.tried){this.dataset.tried=1; this.src='./real_shot4.png';}" alt="INVIS Launcher Yeni Paket Oluşturma" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
+              <img data-shot="4" src="./assets/real_shot4.png" alt="INVIS Launcher Yeni Paket Oluşturma" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
             </div>
           </div>
         </div>
@@ -239,16 +239,16 @@
           <div class="slider-wrapper">
             <div class="slider-track" id="sliderTrack">
               <div class="slide">
-                <img src="./assets/real_shot1.png" onerror="if(!this.dataset.tried){this.dataset.tried=1; this.src='./real_shot1.png';}" alt="Mod ve Dosya Yönetimi" class="slide-img" />
+                <img data-shot="1" src="./assets/real_shot1.png" alt="Mod ve Dosya Yönetimi" class="slide-img" />
               </div>
               <div class="slide">
-                <img src="./assets/real_shot2.png" onerror="if(!this.dataset.tried){this.dataset.tried=1; this.src='./real_shot2.png';}" alt="Modrinth ve CurseForge Mod Arama" class="slide-img" />
+                <img data-shot="2" src="./assets/real_shot2.png" alt="Modrinth ve CurseForge Mod Arama" class="slide-img" />
               </div>
               <div class="slide">
-                <img src="./assets/real_shot3.png" onerror="if(!this.dataset.tried){this.dataset.tried=1; this.src='./real_shot3.png';}" alt="Tema ve Java Ayarları" class="slide-img" />
+                <img data-shot="3" src="./assets/real_shot3.png" alt="Tema ve Java Ayarları" class="slide-img" />
               </div>
               <div class="slide">
-                <img src="./assets/real_shot4.png" onerror="if(!this.dataset.tried){this.dataset.tried=1; this.src='./real_shot4.png';}" alt="Yeni Oyun Paketi Oluşturucu" class="slide-img" />
+                <img data-shot="4" src="./assets/real_shot4.png" alt="Yeni Oyun Paketi Oluşturucu" class="slide-img" />
               </div>
             </div>
           </div>
@@ -331,28 +331,28 @@
           <form id="feedbackForm" class="feedback-form">
             <!-- Subject Field -->
             <div class="form-group">
-              <div class="form-label-row">
-                <label for="fbSubject" data-i18n="feedback.subjectLabel">Konu / Başlık (Maks 80 Karakter)</label>
-                <span class="char-count" id="subjectCount">0 / 80</span>
+              <label for="fbSubject" data-i18n="feedback.subjectLabel">Konu / Başlık</label>
+              <div class="input-wrapper">
+                <input type="text" id="fbSubject" maxlength="80" required data-i18n="feedback.subjectPlaceholder" placeholder="Örn: Fabric mod listesi yükleme hatası..." />
+                <span class="char-badge" id="subjectCount">0/80</span>
               </div>
-              <input type="text" id="fbSubject" maxlength="80" required data-i18n="feedback.subjectPlaceholder" placeholder="Örn: Fabric mod listesi yükleme hatası..." />
             </div>
 
             <!-- Description Field -->
             <div class="form-group">
-              <div class="form-label-row">
-                <label for="fbDesc" data-i18n="feedback.descLabel">Açıklama & Detaylar (Maks 1000 Karakter)</label>
-                <span class="char-count" id="descCount">0 / 1000</span>
+              <label for="fbDesc" data-i18n="feedback.descLabel">Açıklama & Detaylar</label>
+              <div class="input-wrapper">
+                <textarea id="fbDesc" rows="5" maxlength="1000" required data-i18n="feedback.descPlaceholder" placeholder="Karşılaştığınız hatayı veya önerinizi detaylıca açıklayın..."></textarea>
+                <span class="char-badge" id="descCount">0/1000</span>
               </div>
-              <textarea id="fbDesc" rows="5" maxlength="1000" required data-i18n="feedback.descPlaceholder" placeholder="Karşılaştığınız hatayı veya önerinizi detaylıca açıklayın..."></textarea>
             </div>
 
             <!-- Math Captcha Spam Protection -->
             <div class="form-group">
-              <label for="fbCaptcha" data-i18n="feedback.captchaLabel">Güvenlik Doğrulaması (Spam Koruması)</label>
+              <label for="fbCaptcha" data-i18n="feedback.captchaLabel">Güvenlik Doğrulaması</label>
               <div class="captcha-row">
                 <div class="captcha-box" id="captchaQuestion">5 + 3 = ?</div>
-                <input type="number" id="fbCaptcha" placeholder="Sonuç" required style="max-width:180px;" />
+                <input type="number" id="fbCaptcha" placeholder="Sonuç" required style="max-width:160px;" />
               </div>
             </div>
 
@@ -518,7 +518,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="#hero" class="brand-logo">
-            <img src="./assets/logo.jpg" onerror="if(!this.dataset.tried){this.dataset.tried=1; this.src='./logo.jpg';}" alt="INVIS Logo" class="logo-img" />
+            <img src="./assets/logo.jpg" alt="INVIS Logo" class="logo-img" />
             <div class="logo-text">INVIS <span>Launcher</span></div>
           </a>
           <p data-i18n="footer.desc">
