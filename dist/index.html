@@ -19,8 +19,11 @@
 
     window.switchLanguage = function(lang, e) {
       if (e) e.stopPropagation();
+      localStorage.setItem('invis_lang', lang);
       if (window.i18nEngine) {
         window.i18nEngine.loadLanguage(lang);
+      } else if (window.i18n) {
+        window.i18n.loadLanguage(lang);
       }
       var menu = document.getElementById('langMenu');
       if (menu) menu.classList.remove('open');
@@ -53,7 +56,7 @@
       history.pushState('', document.title, window.location.pathname + window.location.search);
     };
   </script>
-  <script type="module" crossorigin src="./assets/index-CBgljc4F.js"></script>
+  <script type="module" crossorigin src="./assets/index-B7d-bbY_.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-Cfc1SYJ_.css">
 </head>
 <body>

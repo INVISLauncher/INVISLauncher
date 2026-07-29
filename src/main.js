@@ -7,8 +7,9 @@ import realShot2 from './assets/real_shot2.png';
 import realShot3 from './assets/real_shot3.png';
 import realShot4 from './assets/real_shot4.png';
 
-// Global i18n instance
+// Global i18n instance initialized immediately
 const i18n = new I18nEngine();
+window.i18nEngine = i18n;
 window.i18n = i18n;
 
 // Global Language Functions for zero-friction click handlers
@@ -25,7 +26,7 @@ window.switchLanguage = function(lang, e) {
   if (langMenu) langMenu.classList.remove('open');
 };
 
-// Global Form Submit Handler to 100% PREVENT PAGE REFRESH!
+// Global Form Submit Handler with Dual API Sending & Mailto Fallback
 window.handleFeedbackSubmit = async function(e) {
   if (e) e.preventDefault();
 
@@ -43,7 +44,28 @@ window.handleFeedbackSubmit = async function(e) {
   const descVal = fbDesc ? fbDesc.value.trim() : '';
   const userCaptcha = fbCaptcha ? parseInt(fbCaptcha.value.trim(), 10) : 0;
 
-  // Check 24-Hour Limit (Max 3 Submissions per 24 hours)
+  const currentLang = i18n.currentLang || 'tr';
+
+  // 1. Validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(userEmailVal)) {
+    showFormAlert(currentLang === 'en' ? 'Please enter a valid email address.' : 'Lütfen geçerli bir e-posta adresi girin.', 'error');
+    return false;
+  }
+
+  if (subjectVal.length < 5 || descVal.length < 15) {
+    showFormAlert(currentLang === 'en' ? 'Please enter a subject of at least 5 chars and description of 15 chars.' : 'Lütfen en az 5 karakterlik konu ve 15 karakterlik açıklama yazın.', 'error');
+    return false;
+  }
+
+  if (userCaptcha !== window.currentCaptchaResult) {
+    showFormAlert(currentLang === 'en' ? 'Security verification answer is incorrect! Please try again.' : 'Güvenlik doğrulaması cevabı hatalı! Lütfen tekrar deneyin.', 'error');
+    if (window.generateCaptcha) window.generateCaptcha();
+    if (fbCaptcha) fbCaptcha.value = '';
+    return false;
+  }
+
+  // 2. 24-Hour Limit Check (Max 3 submissions per 24h)
   const historyStr = localStorage.getItem('invis_feedback_history') || '[]';
   let history = [];
   try { history = JSON.parse(historyStr); } catch { history = []; }
@@ -51,76 +73,77 @@ window.handleFeedbackSubmit = async function(e) {
   history = history.filter((ts) => now - ts < 86400000);
 
   if (history.length >= 3) {
-    showFormAlert('Son 24 saat içinde maksimum 3 geri bildirim gönderme hakkınızı doldurdunuz. Lütfen daha sonra tekrar deneyin.', 'error');
+    showFormAlert(currentLang === 'en' ? 'You have reached the limit of 3 feedback submissions per 24 hours. Please try again later.' : 'Son 24 saat içinde maksimum 3 geri bildirim gönderme hakkınızı doldurdunuz. Lütfen daha sonra tekrar deneyin.', 'error');
     return false;
   }
 
-  // Check Email Validity
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(userEmailVal)) {
-    showFormAlert('Lütfen geçerli bir e-posta adresi girin.', 'error');
-    return false;
-  }
-
-  // Check Min Lengths
-  if (subjectVal.length < 5 || descVal.length < 15) {
-    showFormAlert('Lütfen en az 5 karakterlik konu ve 15 karakterlik açıklama yazın.', 'error');
-    return false;
-  }
-
-  // Check Math Captcha
-  if (userCaptcha !== window.currentCaptchaResult) {
-    showFormAlert('Güvenlik doğrulaması cevabı hatalı! Lütfen tekrar deneyin.', 'error');
-    if (window.generateCaptcha) window.generateCaptcha();
-    if (fbCaptcha) fbCaptcha.value = '';
-    return false;
-  }
-
-  // Show loading spinner
+  // 3. UI Loading State
   if (submitFeedbackBtn) {
     submitFeedbackBtn.disabled = true;
-    submitFeedbackBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Gönderiliyor...</span>`;
+    submitFeedbackBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>${currentLang === 'en' ? 'Sending...' : 'Gönderiliyor...'}</span>`;
   }
 
-  showFormAlert('Geri bildiriminiz ekibimize iletiliyor...', 'success');
+  showFormAlert(currentLang === 'en' ? 'Sending your feedback to invislauncher@gmail.com...' : 'Geri bildiriminiz invislauncher@gmail.com adresine iletiliyor...', 'success');
 
+  let sentSuccessfully = false;
+
+  // Try API 1: Web3Forms API
   try {
-    // Send to FormSubmit API endpoint to deliver real email to invislauncher@gmail.com
-    const response = await fetch('https://formsubmit.co/ajax/invislauncher@gmail.com', {
+    const res1 = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
-        _replyto: userEmailVal,
-        name: 'INVIS Website User',
+        access_key: 'a888c3a9-fb01-4475-9279-d1bf1e231e67',
+        email: userEmailVal,
+        replyto: userEmailVal,
         subject: `[INVIS Launcher Geri Bildirim] ${subjectVal}`,
-        message: `Gönderen E-Posta: ${userEmailVal}\nKonu: ${subjectVal}\n\nAçıklama & Detaylar:\n${descVal}`
+        message: `Gönderen E-Posta: ${userEmailVal}\nKonu: ${subjectVal}\n\nDetaylar:\n${descVal}`
       })
     });
-
-    if (response.ok || response.status === 200) {
-      history.push(now);
-      localStorage.setItem('invis_feedback_history', JSON.stringify(history));
-
-      showFormAlert('✅ Geri bildiriminiz başarıyla invislauncher@gmail.com adresine iletildi! Teşekkür ederiz.', 'success');
-      const form = document.getElementById('feedbackForm');
-      if (form) form.reset();
-      if (subjectCount) subjectCount.textContent = '0/80';
-      if (descCount) descCount.textContent = '0/1000';
-    } else {
-      openMailtoFallback(userEmailVal, subjectVal, descVal);
-    }
-  } catch {
-    openMailtoFallback(userEmailVal, subjectVal, descVal);
-  } finally {
-    if (submitFeedbackBtn) {
-      submitFeedbackBtn.disabled = false;
-      submitFeedbackBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span data-i18n="feedback.submitBtn">Geri Bildirimi Gönder</span>`;
-    }
-    if (window.generateCaptcha) window.generateCaptcha();
+    if (res1.ok || res1.status === 200) sentSuccessfully = true;
+  } catch (err) {
+    console.warn('Web3Forms API submit error:', err);
   }
+
+  // Try API 2: FormSubmit API (if API 1 fails)
+  if (!sentSuccessfully) {
+    try {
+      const res2 = await fetch('https://formsubmit.co/ajax/invislauncher@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          _replyto: userEmailVal,
+          name: 'INVIS User',
+          subject: `[INVIS Launcher Geri Bildirim] ${subjectVal}`,
+          message: `Gönderen E-Posta: ${userEmailVal}\nKonu: ${subjectVal}\n\nDetaylar:\n${descVal}`
+        })
+      });
+      if (res2.ok || res2.status === 200) sentSuccessfully = true;
+    } catch (err) {
+      console.warn('FormSubmit API submit error:', err);
+    }
+  }
+
+  // Final Response & Handling
+  if (sentSuccessfully) {
+    history.push(now);
+    localStorage.setItem('invis_feedback_history', JSON.stringify(history));
+
+    showFormAlert(currentLang === 'en' ? '✅ Your feedback has been successfully sent to invislauncher@gmail.com! Thank you.' : '✅ Geri bildiriminiz başarıyla invislauncher@gmail.com adresine iletildi! Teşekkür ederiz.', 'success');
+    const form = document.getElementById('feedbackForm');
+    if (form) form.reset();
+    if (subjectCount) subjectCount.textContent = '0/80';
+    if (descCount) descCount.textContent = '0/1000';
+  } else {
+    // Fallback: Mailto link trigger
+    openMailtoFallback(userEmailVal, subjectVal, descVal);
+  }
+
+  if (submitFeedbackBtn) {
+    submitFeedbackBtn.disabled = false;
+    submitFeedbackBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>${currentLang === 'en' ? 'Send Feedback' : 'Geri Bildirimi Gönder'}</span>`;
+  }
+  if (window.generateCaptcha) window.generateCaptcha();
 
   return false;
 };

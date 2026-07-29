@@ -122,7 +122,7 @@ const trDict = {
     "termsP3": "Kullanıcılar katıldıkları çok oyunculu sunucuların kurallarına uymakla yükümlüdür.",
     "termsH3": "3. Üçüncü Taraf Mod ve İçerikler",
     "termsP4": "Modrinth ve CurseForge aracılığıyla indirilen modlar ilgili bağımsız geliştiricilere aittir.",
-    "termsH4": "4. Sorumluluk Sınıralaması ve Garanti Reddi",
+    "termsH4": "4. Sorumluluk Sınırlaması ve Garanti Reddi",
     "termsP5": "Yazılım 'OLDUĞU GİBİ' (AS IS) sunulmaktadır."
   },
   "changelog": {
@@ -296,6 +296,8 @@ export class I18nEngine {
       tr: trDict,
       en: enDict
     };
+    window.i18nEngine = this;
+    window.i18n = this;
   }
 
   async init() {
