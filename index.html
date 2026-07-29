@@ -9,6 +9,51 @@
   <link rel="stylesheet" href="./src/style.css" />
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- IMMEDIATE INLINE GLOBAL EVENT HANDLERS -->
+  <script>
+    window.toggleLangMenu = function(e) {
+      if (e) e.stopPropagation();
+      var menu = document.getElementById('langMenu');
+      if (menu) menu.classList.toggle('open');
+    };
+
+    window.switchLanguage = function(lang, e) {
+      if (e) e.stopPropagation();
+      if (window.i18nEngine) {
+        window.i18nEngine.loadLanguage(lang);
+      }
+      var menu = document.getElementById('langMenu');
+      if (menu) menu.classList.remove('open');
+    };
+
+    window.showPrivacy = function(e) {
+      if (e) e.preventDefault();
+      var p = document.getElementById('privacyView');
+      var t = document.getElementById('termsView');
+      if (p) p.classList.add('active');
+      if (t) t.classList.remove('active');
+      window.location.hash = 'privacy';
+    };
+
+    window.showTerms = function(e) {
+      if (e) e.preventDefault();
+      var p = document.getElementById('privacyView');
+      var t = document.getElementById('termsView');
+      if (t) t.classList.add('active');
+      if (p) p.classList.remove('active');
+      window.location.hash = 'terms';
+    };
+
+    window.hideLegalViews = function(e) {
+      if (e) e.preventDefault();
+      var p = document.getElementById('privacyView');
+      var t = document.getElementById('termsView');
+      if (p) p.classList.remove('active');
+      if (t) t.classList.remove('active');
+      history.pushState('', document.title, window.location.pathname + window.location.search);
+    };
+  </script>
 </head>
 <body>
 
@@ -35,7 +80,7 @@
       </nav>
 
       <div class="nav-actions">
-        <!-- Language Switcher Dropdown (Click-Triggered via Window Function) -->
+        <!-- Language Switcher Dropdown -->
         <div class="lang-dropdown" id="langDropdown">
           <button class="lang-btn" id="langDropdownBtn" onclick="window.toggleLangMenu(event)" type="button">
             <i class="fa-solid fa-globe"></i>
@@ -472,7 +517,7 @@
   <!-- DEDICATED PRIVACY POLICY PAGE VIEW -->
   <div class="legal-view" id="privacyView">
     <div class="legal-container">
-      <button class="legal-back-btn backFromLegalBtn" data-i18n="legal.backToHome" type="button">← Ana Sayfaya Dön</button>
+      <button class="legal-back-btn" onclick="window.hideLegalViews(event)" data-i18n="legal.backToHome" type="button">← Ana Sayfaya Dön</button>
       <h1 class="legal-title" data-i18n="legal.privacyTitle">Gizlilik Politikası</h1>
       <div class="legal-date" data-i18n="legal.lastUpdated">Son Güncelleme: Temmuz 2026</div>
 
@@ -497,7 +542,7 @@
   <!-- DEDICATED TERMS OF SERVICE PAGE VIEW -->
   <div class="legal-view" id="termsView">
     <div class="legal-container">
-      <button class="legal-back-btn backFromLegalBtn" data-i18n="legal.backToHome" type="button">← Ana Sayfaya Dön</button>
+      <button class="legal-back-btn" onclick="window.hideLegalViews(event)" data-i18n="legal.backToHome" type="button">← Ana Sayfaya Dön</button>
       <h1 class="legal-title" data-i18n="legal.termsTitle">Kullanım Koşulları</h1>
       <div class="legal-date" data-i18n="legal.lastUpdated">Son Güncelleme: Temmuz 2026</div>
 
@@ -549,8 +594,8 @@
           <ul class="footer-links">
             <li><a href="https://github.com/INVISLauncher/invislauncher" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> <span data-i18n="footer.github">GitHub Sayfası</span></a></li>
             <li><a href="https://discord.com" target="_blank" rel="noopener"><i class="fa-brands fa-discord"></i> <span data-i18n="footer.discord">Discord Topluluğu</span></a></li>
-            <li><button id="openPrivacyFooterBtn" data-i18n="footer.privacy" type="button">Gizlilik Politikası</button></li>
-            <li><button id="openTermsFooterBtn" data-i18n="footer.terms" type="button">Kullanım Koşulları</button></li>
+            <li><button onclick="window.showPrivacy(event)" data-i18n="footer.privacy" type="button">Gizlilik Politikası</button></li>
+            <li><button onclick="window.showTerms(event)" data-i18n="footer.terms" type="button">Kullanım Koşulları</button></li>
           </ul>
         </div>
       </div>
