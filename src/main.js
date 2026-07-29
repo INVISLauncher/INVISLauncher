@@ -113,7 +113,9 @@ window.handleFeedbackSubmit = async function(e) {
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
           _replyto: userEmailVal,
-          name: 'INVIS User',
+          _captcha: 'false',
+          _url: window.location.href,
+          name: 'INVIS Launcher User',
           subject: `[INVIS Launcher Geri Bildirim] ${subjectVal}`,
           message: `Gönderen E-Posta: ${userEmailVal}\nKonu: ${subjectVal}\n\nDetaylar:\n${descVal}`
         })
