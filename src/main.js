@@ -7,6 +7,140 @@ import realShot2 from './assets/real_shot2.png';
 import realShot3 from './assets/real_shot3.png';
 import realShot4 from './assets/real_shot4.png';
 
+// Global i18n instance
+const i18n = new I18nEngine();
+window.i18n = i18n;
+
+// Global Language Functions for zero-friction click handlers
+window.toggleLangMenu = function(e) {
+  if (e) e.stopPropagation();
+  const langMenu = document.getElementById('langMenu');
+  if (langMenu) langMenu.classList.toggle('open');
+};
+
+window.switchLanguage = function(lang, e) {
+  if (e) e.stopPropagation();
+  i18n.loadLanguage(lang);
+  const langMenu = document.getElementById('langMenu');
+  if (langMenu) langMenu.classList.remove('open');
+};
+
+// Global Form Submit Handler to 100% PREVENT PAGE REFRESH!
+window.handleFeedbackSubmit = async function(e) {
+  if (e) e.preventDefault();
+
+  const fbEmail = document.getElementById('fbEmail');
+  const fbSubject = document.getElementById('fbSubject');
+  const fbDesc = document.getElementById('fbDesc');
+  const fbCaptcha = document.getElementById('fbCaptcha');
+  const subjectCount = document.getElementById('subjectCount');
+  const descCount = document.getElementById('descCount');
+  const formAlert = document.getElementById('formAlert');
+  const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
+
+  const userEmailVal = fbEmail ? fbEmail.value.trim() : '';
+  const subjectVal = fbSubject ? fbSubject.value.trim() : '';
+  const descVal = fbDesc ? fbDesc.value.trim() : '';
+  const userCaptcha = fbCaptcha ? parseInt(fbCaptcha.value.trim(), 10) : 0;
+
+  // Check 24-Hour Limit (Max 3 Submissions per 24 hours)
+  const historyStr = localStorage.getItem('invis_feedback_history') || '[]';
+  let history = [];
+  try { history = JSON.parse(historyStr); } catch { history = []; }
+  const now = Date.now();
+  history = history.filter((ts) => now - ts < 86400000);
+
+  if (history.length >= 3) {
+    showFormAlert('Son 24 saat içinde maksimum 3 geri bildirim gönderme hakkınızı doldurdunuz. Lütfen daha sonra tekrar deneyin.', 'error');
+    return false;
+  }
+
+  // Check Email Validity
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(userEmailVal)) {
+    showFormAlert('Lütfen geçerli bir e-posta adresi girin.', 'error');
+    return false;
+  }
+
+  // Check Min Lengths
+  if (subjectVal.length < 5 || descVal.length < 15) {
+    showFormAlert('Lütfen en az 5 karakterlik konu ve 15 karakterlik açıklama yazın.', 'error');
+    return false;
+  }
+
+  // Check Math Captcha
+  if (userCaptcha !== window.currentCaptchaResult) {
+    showFormAlert('Güvenlik doğrulaması cevabı hatalı! Lütfen tekrar deneyin.', 'error');
+    if (window.generateCaptcha) window.generateCaptcha();
+    if (fbCaptcha) fbCaptcha.value = '';
+    return false;
+  }
+
+  // Show loading spinner
+  if (submitFeedbackBtn) {
+    submitFeedbackBtn.disabled = true;
+    submitFeedbackBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Gönderiliyor...</span>`;
+  }
+
+  showFormAlert('Geri bildiriminiz ekibimize iletiliyor...', 'success');
+
+  try {
+    // Send to FormSubmit API endpoint to deliver real email to invislauncher@gmail.com
+    const response = await fetch('https://formsubmit.co/ajax/invislauncher@gmail.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        _replyto: userEmailVal,
+        name: 'INVIS Website User',
+        subject: `[INVIS Launcher Geri Bildirim] ${subjectVal}`,
+        message: `Gönderen E-Posta: ${userEmailVal}\nKonu: ${subjectVal}\n\nAçıklama & Detaylar:\n${descVal}`
+      })
+    });
+
+    if (response.ok || response.status === 200) {
+      history.push(now);
+      localStorage.setItem('invis_feedback_history', JSON.stringify(history));
+
+      showFormAlert('✅ Geri bildiriminiz başarıyla invislauncher@gmail.com adresine iletildi! Teşekkür ederiz.', 'success');
+      const form = document.getElementById('feedbackForm');
+      if (form) form.reset();
+      if (subjectCount) subjectCount.textContent = '0/80';
+      if (descCount) descCount.textContent = '0/1000';
+    } else {
+      openMailtoFallback(userEmailVal, subjectVal, descVal);
+    }
+  } catch {
+    openMailtoFallback(userEmailVal, subjectVal, descVal);
+  } finally {
+    if (submitFeedbackBtn) {
+      submitFeedbackBtn.disabled = false;
+      submitFeedbackBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span data-i18n="feedback.submitBtn">Geri Bildirimi Gönder</span>`;
+    }
+    if (window.generateCaptcha) window.generateCaptcha();
+  }
+
+  return false;
+};
+
+function openMailtoFallback(userEmailVal, subjectVal, descVal) {
+  showFormAlert('⚠️ E-posta istemciniz hazırlanıyor...', 'success');
+  const mailUrl = `mailto:invislauncher@gmail.com?subject=${encodeURIComponent('[INVIS Geri Bildirim] ' + subjectVal)}&body=${encodeURIComponent('Gönderen: ' + userEmailVal + '\n\n' + descVal)}`;
+  setTimeout(() => {
+    window.location.href = mailUrl;
+  }, 600);
+}
+
+function showFormAlert(msg, type) {
+  const formAlert = document.getElementById('formAlert');
+  if (!formAlert) return;
+  formAlert.textContent = msg;
+  formAlert.className = `form-alert ${type}`;
+  formAlert.style.display = 'block';
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   // 0. Bind Bundled Images Immediately to DOM
   function bindImages() {
@@ -32,41 +166,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   bindImages();
 
-  // 1. Initialize Internationalization (i18n)
-  const i18n = new I18nEngine();
+  // 1. Initialize i18n
   await i18n.init();
-
-  // Re-bind images if i18n re-renders
   bindImages();
 
-  // 1b. Language Dropdown Trigger (Click & Touch)
-  const langDropdownBtn = document.getElementById('langDropdownBtn');
-  const langMenu = document.getElementById('langMenu');
-
-  if (langDropdownBtn && langMenu) {
-    langDropdownBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      langMenu.classList.toggle('open');
-    });
-
-    document.addEventListener('click', () => {
+  // Close dropdown on outside click
+  document.addEventListener('click', (e) => {
+    const langDropdown = document.getElementById('langDropdown');
+    const langMenu = document.getElementById('langMenu');
+    if (langDropdown && !langDropdown.contains(e.target) && langMenu) {
       langMenu.classList.remove('open');
-    });
-  }
-
-  // Bind language option buttons
-  document.querySelectorAll('.lang-opt').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const lang = e.currentTarget.getAttribute('data-lang');
-      if (lang) {
-        i18n.loadLanguage(lang);
-        if (langMenu) langMenu.classList.remove('open');
-      }
-    });
+    }
   });
 
-  // 2. Sticky Navbar & Reliable ScrollSpy Highlight
+  // 2. Reliable ScrollSpy Highlight on Navbar Links
   const navbar = document.getElementById('navbar');
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-link');
@@ -78,7 +191,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (navbar) navbar.classList.remove('scrolled');
     }
 
-    const scrollPos = window.scrollY + 200;
+    const scrollPos = window.scrollY + 180;
 
     sections.forEach((section) => {
       const top = section.offsetTop;
@@ -110,11 +223,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       });
     },
-    { threshold: 0.1 }
+    { threshold: 0.08 }
   );
   revealElements.forEach((el) => revealObserver.observe(el));
 
-  // 4. Interactive UI Showcase Preview Tabs
+  // 4. Preview Tabs
   const tabBtns = document.querySelectorAll('.tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
 
@@ -205,31 +318,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  // 7. Real Working Feedback Form with User Email & Math Captcha Randomizer
-  const feedbackForm = document.getElementById('feedbackForm');
-  const fbEmail = document.getElementById('fbEmail');
+  // 7. Math Captcha Randomizer
   const fbSubject = document.getElementById('fbSubject');
   const fbDesc = document.getElementById('fbDesc');
-  const fbCaptcha = document.getElementById('fbCaptcha');
   const subjectCount = document.getElementById('subjectCount');
   const descCount = document.getElementById('descCount');
   const captchaQuestion = document.getElementById('captchaQuestion');
-  const formAlert = document.getElementById('formAlert');
-  const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
 
-  let captchaResult = 0;
-
-  function generateCaptcha() {
+  window.currentCaptchaResult = 0;
+  window.generateCaptcha = function() {
     const num1 = Math.floor(Math.random() * 8) + 2; // 2 to 9
     const num2 = Math.floor(Math.random() * 8) + 1; // 1 to 8
-    captchaResult = num1 + num2;
+    window.currentCaptchaResult = num1 + num2;
     if (captchaQuestion) {
       captchaQuestion.textContent = `${num1} + ${num2} = ?`;
     }
-  }
-  generateCaptcha();
+  };
+  window.generateCaptcha();
 
-  // Floating Character Badges (e.g. 0/80, 0/1000)
+  // Floating Character Counter Badges
   if (fbSubject && subjectCount) {
     fbSubject.addEventListener('input', () => {
       subjectCount.textContent = `${fbSubject.value.length}/80`;
@@ -240,120 +347,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     fbDesc.addEventListener('input', () => {
       descCount.textContent = `${fbDesc.value.length}/1000`;
     });
-  }
-
-  function getRecentSubmissions() {
-    try {
-      const historyStr = localStorage.getItem('invis_feedback_history');
-      if (!historyStr) return [];
-      const history = JSON.parse(historyStr);
-      const now = Date.now();
-      // Keep only timestamps within the last 24 hours (86,400,000 ms)
-      return history.filter((ts) => now - ts < 86400000);
-    } catch {
-      return [];
-    }
-  }
-
-  if (feedbackForm) {
-    feedbackForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const userEmailVal = fbEmail ? fbEmail.value.trim() : '';
-      const subjectVal = fbSubject ? fbSubject.value.trim() : '';
-      const descVal = fbDesc ? fbDesc.value.trim() : '';
-      const userCaptcha = parseInt(fbCaptcha.value.trim(), 10);
-
-      // Check 24-Hour Limit (Max 3 Submissions per 24 hours)
-      const recentSubmissions = getRecentSubmissions();
-      if (recentSubmissions.length >= 3) {
-        showFormAlert('Son 24 saat içinde maksimum 3 geri bildirim gönderme hakkınızı doldurdunuz. Lütfen daha sonra tekrar deneyin.', 'error');
-        return;
-      }
-
-      // Check Email Validity
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(userEmailVal)) {
-        showFormAlert('Lütfen geçerli bir e-posta adresi girin.', 'error');
-        return;
-      }
-
-      // Check Min Lengths
-      if (subjectVal.length < 5 || descVal.length < 15) {
-        showFormAlert('Lütfen en az 5 karakterlik konu ve 15 karakterlik açıklama yazın.', 'error');
-        return;
-      }
-
-      // Check Math Captcha
-      if (userCaptcha !== captchaResult) {
-        showFormAlert('Güvenlik doğrulaması cevabı hatalı! Lütfen tekrar deneyin.', 'error');
-        generateCaptcha();
-        if (fbCaptcha) fbCaptcha.value = '';
-        return;
-      }
-
-      // Disable button & show spinner loading state
-      if (submitFeedbackBtn) {
-        submitFeedbackBtn.disabled = true;
-        submitFeedbackBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Gönderiliyor...</span>`;
-      }
-
-      showFormAlert('Geri bildiriminiz ekibimize iletiliyor...', 'success');
-
-      try {
-        // Send directly to Formspree & Web3Forms to guarantee delivery to invislauncher@gmail.com
-        const response = await fetch('https://formspree.io/f/xbjnqpyz', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            email: userEmailVal,
-            _replyto: userEmailVal,
-            subject: `[INVIS Launcher Geri Bildirim] ${subjectVal}`,
-            message: `Gönderen E-Posta: ${userEmailVal}\nKonu: ${subjectVal}\n\nMesaj:\n${descVal}`
-          })
-        });
-
-        if (response.ok || response.status === 200 || response.status === 201) {
-          // Record Submission Timestamp
-          recentSubmissions.push(Date.now());
-          localStorage.setItem('invis_feedback_history', JSON.stringify(recentSubmissions));
-
-          showFormAlert('✅ Geri bildiriminiz başarıyla ekibimize (invislauncher@gmail.com) iletildi! Teşekkür ederiz.', 'success');
-          feedbackForm.reset();
-          if (subjectCount) subjectCount.textContent = '0/80';
-          if (descCount) descCount.textContent = '0/1000';
-        } else {
-          // Fallback to mailto link
-          openMailtoFallback(userEmailVal, subjectVal, descVal);
-        }
-      } catch {
-        openMailtoFallback(userEmailVal, subjectVal, descVal);
-      } finally {
-        if (submitFeedbackBtn) {
-          submitFeedbackBtn.disabled = false;
-          submitFeedbackBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span data-i18n="feedback.submitBtn">Geri Bildirimi Gönder</span>`;
-        }
-        generateCaptcha();
-      }
-    });
-  }
-
-  function openMailtoFallback(userEmailVal, subjectVal, descVal) {
-    showFormAlert('⚠️ E-posta istemciniz hazırlanıyor...', 'success');
-    const mailUrl = `mailto:invislauncher@gmail.com?subject=${encodeURIComponent('[INVIS Geri Bildirim] ' + subjectVal)}&body=${encodeURIComponent('Gönderen: ' + userEmailVal + '\n\n' + descVal)}`;
-    setTimeout(() => {
-      window.location.href = mailUrl;
-    }, 600);
-  }
-
-  function showFormAlert(msg, type) {
-    if (!formAlert) return;
-    formAlert.textContent = msg;
-    formAlert.className = `form-alert ${type}`;
-    formAlert.style.display = 'block';
   }
 
   // 8. Changelog Modal Controller
