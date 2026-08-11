@@ -12,6 +12,101 @@ const i18n = new I18nEngine();
 window.i18nEngine = i18n;
 window.i18n = i18n;
 
+// Disposable Email Domain Blacklist
+const DISPOSABLE_DOMAINS = [
+  'tempmail.com', 'temp-mail.org', 'guerrillamail.com', '10minutemail.com',
+  'trashmail.com', 'mailinator.com', 'sharklasers.com', 'dispostable.com',
+  'yopmail.com', 'getnada.com', 'fakemail.net', 'crazymailing.com',
+  'dropmail.me', 'throwawaymail.com', 'mohmal.com', 'generator.email',
+  'emailondeck.com', 'tempmailo.com', 'burnermail.io', 'mailnesia.com',
+  'maildrop.cc', 'receive-smss.com', 'disposablemail.com', 'mytrashmail.com',
+  'tempmail.net', 'tempmail.ninja', 'tmpmail.org', 'bupmail.com', 'zohomail.top'
+];
+
+function validateRealEmail(emailStr) {
+  const email = emailStr.trim().toLowerCase();
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if (!emailRegex.test(email)) {
+    return { valid: false, reason: 'format' };
+  }
+
+  const parts = email.split('@');
+  if (parts.length !== 2) return { valid: false, reason: 'format' };
+
+  const domain = parts[1];
+  if (DISPOSABLE_DOMAINS.includes(domain)) {
+    return { valid: false, reason: 'disposable' };
+  }
+
+  const domainParts = domain.split('.');
+  if (domainParts.length < 2 || domainParts[domainParts.length - 1].length < 2) {
+    return { valid: false, reason: 'domain' };
+  }
+
+  return { valid: true };
+}
+
+// Visual Anti-Bot Canvas Captcha Generator
+window.currentCaptchaCode = '';
+
+window.generateVisualCaptcha = function() {
+  const canvas = document.getElementById('captchaCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width;
+  const height = canvas.height;
+
+  // Clear background
+  ctx.fillStyle = '#070A11';
+  ctx.fillRect(0, 0, width, height);
+
+  // Generate 5-char alphanumeric code (excluding ambiguous chars)
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 5; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  window.currentCaptchaCode = code;
+
+  // Draw background noise lines
+  for (let i = 0; i < 6; i++) {
+    ctx.strokeStyle = `rgba(0, 255, 136, ${Math.random() * 0.4 + 0.15})`;
+    ctx.lineWidth = Math.random() * 2 + 1;
+    ctx.beginPath();
+    ctx.moveTo(Math.random() * width, Math.random() * height);
+    ctx.lineTo(Math.random() * width, Math.random() * height);
+    ctx.stroke();
+  }
+
+  // Draw noise dots
+  for (let i = 0; i < 35; i++) {
+    ctx.fillStyle = `rgba(0, 240, 255, ${Math.random() * 0.5})`;
+    ctx.beginPath();
+    ctx.arc(Math.random() * width, Math.random() * height, Math.random() * 1.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Draw distorted characters
+  ctx.font = 'bold 22px Outfit, sans-serif';
+  ctx.textBaseline = 'middle';
+  for (let i = 0; i < code.length; i++) {
+    const char = code[i];
+    ctx.save();
+    const x = 16 + i * 24;
+    const y = height / 2 + (Math.random() * 4 - 2);
+    const angle = (Math.random() - 0.5) * 0.4;
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+
+    ctx.fillStyle = i % 2 === 0 ? '#00FF88' : '#00F0FF';
+    ctx.shadowColor = '#00FF88';
+    ctx.shadowBlur = 6;
+    ctx.fillText(char, 0, 0);
+    ctx.restore();
+  }
+};
+
 // Global Language Functions for zero-friction click handlers
 window.toggleLangMenu = function(e) {
   if (e) e.stopPropagation();
@@ -26,7 +121,7 @@ window.switchLanguage = function(lang, e) {
   if (langMenu) langMenu.classList.remove('open');
 };
 
-// Global Form Submit Handler with Dual API Sending & Mailto Fallback
+// Global Form Submit Handler with Real Email Verification & CAPTCHA Check
 window.handleFeedbackSubmit = async function(e) {
   if (e) e.preventDefault();
 
@@ -36,36 +131,41 @@ window.handleFeedbackSubmit = async function(e) {
   const fbCaptcha = document.getElementById('fbCaptcha');
   const subjectCount = document.getElementById('subjectCount');
   const descCount = document.getElementById('descCount');
-  const formAlert = document.getElementById('formAlert');
   const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
 
   const userEmailVal = fbEmail ? fbEmail.value.trim() : '';
   const subjectVal = fbSubject ? fbSubject.value.trim() : '';
   const descVal = fbDesc ? fbDesc.value.trim() : '';
-  const userCaptcha = fbCaptcha ? parseInt(fbCaptcha.value.trim(), 10) : 0;
+  const userCaptchaVal = fbCaptcha ? fbCaptcha.value.trim() : '';
 
   const currentLang = i18n.currentLang || 'tr';
 
-  // 1. Validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(userEmailVal)) {
-    showFormAlert(currentLang === 'en' ? 'Please enter a valid email address.' : 'Lütfen geçerli bir e-posta adresi girin.', 'error');
+  // 1. Strict Real Email Verification & Anti-Temp-Mail Check
+  const emailCheck = validateRealEmail(userEmailVal);
+  if (!emailCheck.valid) {
+    if (emailCheck.reason === 'disposable') {
+      showFormAlert(currentLang === 'en' ? '⚠️ Temporary (Temp-Mail) email addresses are blocked! Please use a real email.' : '⚠️ Geçici (Temp-Mail) e-posta adresleri engellenmiştir! Lütfen gerçek e-posta adresinizi girin.', 'error');
+    } else {
+      showFormAlert(currentLang === 'en' ? '⚠️ Please enter a valid real email address!' : '⚠️ Lütfen geçerli bir gerçek e-posta adresi girin.', 'error');
+    }
     return false;
   }
 
+  // 2. Minimum character check
   if (subjectVal.length < 5 || descVal.length < 15) {
     showFormAlert(currentLang === 'en' ? 'Please enter a subject of at least 5 chars and description of 15 chars.' : 'Lütfen en az 5 karakterlik konu ve 15 karakterlik açıklama yazın.', 'error');
     return false;
   }
 
-  if (userCaptcha !== window.currentCaptchaResult) {
-    showFormAlert(currentLang === 'en' ? 'Security verification answer is incorrect! Please try again.' : 'Güvenlik doğrulaması cevabı hatalı! Lütfen tekrar deneyin.', 'error');
-    if (window.generateCaptcha) window.generateCaptcha();
+  // 3. CAPTCHA Verification Code Check
+  if (!userCaptchaVal || userCaptchaVal.toUpperCase() !== window.currentCaptchaCode.toUpperCase()) {
+    showFormAlert(currentLang === 'en' ? '❌ CAPTCHA verification code is incorrect! Please try again.' : '❌ Güvenlik doğrulaması (CAPTCHA) kodu hatalı! Lütfen kodu tekrar girin.', 'error');
+    if (window.generateVisualCaptcha) window.generateVisualCaptcha();
     if (fbCaptcha) fbCaptcha.value = '';
     return false;
   }
 
-  // 2. 24-Hour Limit Check (Max 3 submissions per 24h)
+  // 4. 24-Hour Limit Check (Max 3 submissions per 24h)
   const historyStr = localStorage.getItem('invis_feedback_history') || '[]';
   let history = [];
   try { history = JSON.parse(historyStr); } catch { history = []; }
@@ -77,7 +177,7 @@ window.handleFeedbackSubmit = async function(e) {
     return false;
   }
 
-  // 3. UI Loading State
+  // 5. UI Loading State
   if (submitFeedbackBtn) {
     submitFeedbackBtn.disabled = true;
     submitFeedbackBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>${currentLang === 'en' ? 'Sending...' : 'Gönderiliyor...'}</span>`;
@@ -136,6 +236,8 @@ window.handleFeedbackSubmit = async function(e) {
     if (form) form.reset();
     if (subjectCount) subjectCount.textContent = '0/80';
     if (descCount) descCount.textContent = '0/1000';
+    const badge = document.getElementById('emailVerifyBadge');
+    if (badge) badge.style.display = 'none';
   } else {
     // Fallback: Mailto link trigger
     openMailtoFallback(userEmailVal, subjectVal, descVal);
@@ -145,7 +247,7 @@ window.handleFeedbackSubmit = async function(e) {
     submitFeedbackBtn.disabled = false;
     submitFeedbackBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>${currentLang === 'en' ? 'Send Feedback' : 'Geri Bildirimi Gönder'}</span>`;
   }
-  if (window.generateCaptcha) window.generateCaptcha();
+  if (window.generateVisualCaptcha) window.generateVisualCaptcha();
 
   return false;
 };
@@ -194,6 +296,35 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 1. Initialize i18n
   await i18n.init();
   bindImages();
+
+  // Initialize Visual CAPTCHA
+  window.generateVisualCaptcha();
+
+  // Real-Time Email Verification Listener
+  const fbEmail = document.getElementById('fbEmail');
+  const emailVerifyBadge = document.getElementById('emailVerifyBadge');
+
+  if (fbEmail && emailVerifyBadge) {
+    fbEmail.addEventListener('input', () => {
+      const val = fbEmail.value.trim();
+      if (!val) {
+        emailVerifyBadge.style.display = 'none';
+        return;
+      }
+      const res = validateRealEmail(val);
+      if (res.valid) {
+        emailVerifyBadge.className = 'email-verify-badge valid';
+        emailVerifyBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>${i18n.currentLang === 'en' ? 'Valid Real Email Format' : 'Geçerli Gerçek E-Posta Formatı'}</span>`;
+      } else {
+        emailVerifyBadge.className = 'email-verify-badge invalid';
+        if (res.reason === 'disposable') {
+          emailVerifyBadge.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>${i18n.currentLang === 'en' ? 'Disposable / Temp-Mail Engelled!' : 'Geçici (Temp-Mail) E-Posta Engellendi!'}</span>`;
+        } else {
+          emailVerifyBadge.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>${i18n.currentLang === 'en' ? 'Invalid Email Format' : 'Geçersiz E-Posta Formatı'}</span>`;
+        }
+      }
+    });
+  }
 
   // Close dropdown on outside click
   document.addEventListener('click', (e) => {
@@ -343,25 +474,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  // 7. Math Captcha Randomizer
+  // Character Counter Badges
   const fbSubject = document.getElementById('fbSubject');
   const fbDesc = document.getElementById('fbDesc');
   const subjectCount = document.getElementById('subjectCount');
   const descCount = document.getElementById('descCount');
-  const captchaQuestion = document.getElementById('captchaQuestion');
 
-  window.currentCaptchaResult = 0;
-  window.generateCaptcha = function() {
-    const num1 = Math.floor(Math.random() * 8) + 2; // 2 to 9
-    const num2 = Math.floor(Math.random() * 8) + 1; // 1 to 8
-    window.currentCaptchaResult = num1 + num2;
-    if (captchaQuestion) {
-      captchaQuestion.textContent = `${num1} + ${num2} = ?`;
-    }
-  };
-  window.generateCaptcha();
-
-  // Floating Character Counter Badges
   if (fbSubject && subjectCount) {
     fbSubject.addEventListener('input', () => {
       subjectCount.textContent = `${fbSubject.value.length}/80`;
