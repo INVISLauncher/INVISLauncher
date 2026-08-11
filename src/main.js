@@ -501,24 +501,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 3. Multi-directional Scroll Reveal + Stats Counter Animation
   const revealElements = document.querySelectorAll('.reveal-on-scroll');
-  const revealObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-          // Trigger counter animation for stat-number elements inside
-          entry.target.querySelectorAll('.stat-number[data-count]').forEach(el => _animateCounter(el));
-          // Also handle if this element IS a stat-number
-          if (entry.target.matches('.stat-number[data-count]')) _animateCounter(entry.target);
-        }
-      });
-    },
-    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
-  );
-  revealElements.forEach((el) => revealObserver.observe(el));
-
-  // Also observe stat-numbers that might not be in reveal-on-scroll
-  document.querySelectorAll('.stat-number[data-count]').forEach(el => revealObserver.observe(el));
 
   // Stats counter animation engine
   function _animateCounter(el) {
@@ -526,11 +508,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     el.dataset.animated = '1';
     const target = parseInt(el.dataset.count, 10);
     const suffix = el.dataset.suffix || '';
-    const duration = 1800;
+    const duration = 1600;
     const start = performance.now();
     function step(now) {
       const elapsed = Math.min(now - start, duration);
-      const progress = 1 - Math.pow(1 - elapsed / duration, 4); // ease-out-quart
+      const progress = 1 - Math.pow(1 - elapsed / duration, 4);
       const value = Math.round(progress * target);
       el.textContent = (target === 0 ? '0' : value) + suffix;
       if (elapsed < duration) requestAnimationFrame(step);
@@ -538,6 +520,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     requestAnimationFrame(step);
   }
+
+  function _revealEl(el) {
+    el.classList.add('revealed');
+    el.querySelectorAll('.stat-number[data-count]').forEach(s => _animateCounter(s));
+    if (el.matches && el.matches('.stat-number[data-count]')) _animateCounter(el);
+  }
+
+  // Use IntersectionObserver if available, fallback to showing all
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            _revealEl(entry.target);
+            revealObserver.unobserve(entry.target); // Only reveal once
+          }
+        });
+      },
+      { threshold: 0.06, rootMargin: '0px 0px -20px 0px' }
+    );
+    revealElements.forEach((el) => revealObserver.observe(el));
+    document.querySelectorAll('.stat-number[data-count]').forEach(el => revealObserver.observe(el));
+  } else {
+    // Fallback: show everything immediately if no IntersectionObserver support
+    revealElements.forEach(el => _revealEl(el));
+  }
+
+  // Safety net: after 2.5s force-reveal anything still hidden (handles edge cases)
+  setTimeout(function() {
+    document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach(el => _revealEl(el));
+  }, 2500);
 
   // 4. Preview Tabs
   const tabBtns = document.querySelectorAll('.tab-btn');

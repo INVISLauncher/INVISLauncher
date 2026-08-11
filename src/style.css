@@ -120,6 +120,11 @@ body {
   opacity: 0;
   transform: translateY(40px);
   transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Safety: if JS fails, show after animation delay via fallback animation */
+  animation: revealFallback 0s 3s forwards;
+}
+@keyframes revealFallback {
+  to { opacity: 1; transform: translateY(0) translateX(0) scale(1) rotate(0deg); }
 }
 .reveal-on-scroll.reveal-left {
   transform: translateX(-60px);
