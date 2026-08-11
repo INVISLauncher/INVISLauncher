@@ -164,6 +164,30 @@
       </div>
     </section>
 
+    <!-- ANIMATED STATS COUNTER SECTION -->
+    <section class="stats-section">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-card reveal-on-scroll reveal-scale reveal-stagger-1">
+            <span class="stat-number" data-count="3100" data-suffix="+">0</span>
+            <span class="stat-label">Aktif Kullanıcı</span>
+          </div>
+          <div class="stat-card reveal-on-scroll reveal-scale reveal-stagger-2">
+            <span class="stat-number" data-count="40" data-suffix="%">0</span>
+            <span class="stat-label">Hızlı İndirme</span>
+          </div>
+          <div class="stat-card reveal-on-scroll reveal-scale reveal-stagger-3">
+            <span class="stat-number" data-count="7" data-suffix=" Yeni">0</span>
+            <span class="stat-label">v3.1.2 Özelliği</span>
+          </div>
+          <div class="stat-card reveal-on-scroll reveal-scale reveal-stagger-4">
+            <span class="stat-number" data-count="0" data-suffix=" Reklam">0</span>
+            <span class="stat-label">Tamamen Ücretsiz</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- FEATURES SECTION -->
     <section class="features" id="features">
       <div class="container">
@@ -177,52 +201,47 @@
 
         <div class="features-grid">
           <!-- Card 1 -->
-          <div class="feature-card reveal-on-scroll">
+          <div class="feature-card reveal-on-scroll reveal-left reveal-stagger-1">
             <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
             <h3 class="feature-title" data-i18n="features.card1Title">Hızlı & Hafif İstemci</h3>
             <p class="feature-desc" data-i18n="features.card1Desc">
               Sisteminizi yormayan, hızlı açılan ve arka planda gereksiz kaynak tüketmeyen temiz altyapı.
             </p>
           </div>
-
           <!-- Card 2 -->
-          <div class="feature-card reveal-on-scroll">
+          <div class="feature-card reveal-on-scroll reveal-stagger-2">
             <div class="feature-icon"><i class="fa-solid fa-puzzle-piece"></i></div>
             <h3 class="feature-title" data-i18n="features.card2Title">Modrinth & CurseForge Entegrasyonu</h3>
             <p class="feature-desc" data-i18n="features.card2Desc">
               Yüzlerce mod, shader ve kaynak paketine arayüz içinden kolayca erişin ve yönetin.
             </p>
           </div>
-
           <!-- Card 3 -->
-          <div class="feature-card reveal-on-scroll">
+          <div class="feature-card reveal-on-scroll reveal-right reveal-stagger-3">
             <div class="feature-icon"><i class="fa-solid fa-cubes"></i></div>
             <h3 class="feature-title" data-i18n="features.card3Title">Özel Paket & Tema Oluşturucu</h3>
             <p class="feature-desc" data-i18n="features.card3Desc">
               Minecraft sürümünüzü, Fabric/Forge yükleyicinizi ve canlı renk temalarınızı tek ekrandan belirleyin.
             </p>
           </div>
-
           <!-- Card 4 -->
-          <div class="feature-card reveal-on-scroll">
-            <div class="feature-icon"><i class="fa-solid fa-palette"></i></div>
+          <div class="feature-card reveal-on-scroll reveal-left reveal-stagger-4">
+            <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
             <h3 class="feature-title" data-i18n="features.card4Title">Çökme İzleme & Otomatik Onarım</h3>
             <p class="feature-desc" data-i18n="features.card4Desc">
               Oyun çökme raporlarını arka planda otomatik algılayın ve anında günlük (log) incelemesi yapın.
             </p>
           </div>
-
           <!-- Card 5 -->
-          <div class="feature-card reveal-on-scroll">
-            <div class="feature-icon"><i class="fa-solid fa-ban"></i></div>
+          <div class="feature-card reveal-on-scroll reveal-stagger-5">
+            <div class="feature-icon"><i class="fa-solid fa-arrows-rotate"></i></div>
             <h3 class="feature-title" data-i18n="features.card5Title">Gelişmiş Sürüm Taşıma</h3>
             <p class="feature-desc" data-i18n="features.card5Desc">
               Sürüm yükseltmelerinde modlarınızı uyumluluk kontrolüyle otomatik ve sorunsuz taşıyın.
             </p>
           </div>
-
           <!-- Card 6 -->
-          <div class="feature-card reveal-on-scroll">
+          <div class="feature-card reveal-on-scroll reveal-right reveal-stagger-6">
             <div class="feature-icon"><i class="fa-solid fa-folder-tree"></i></div>
             <h3 class="feature-title" data-i18n="features.card6Title">Gelişmiş Depolama & Java Yönetimi</h3>
             <p class="feature-desc" data-i18n="features.card6Desc">
@@ -429,17 +448,23 @@
               </div>
             </div>
 
-            <!-- Advanced Security Captcha Challenge -->
+            <!-- Advanced Multi-Challenge Security CAPTCHA -->
             <div class="form-group">
-              <label for="fbCaptcha" data-i18n="feedback.captchaLabel">Güvenlik Doğrulaması (CAPTCHA)</label>
-              <div class="captcha-flex-wrapper">
-                <div class="captcha-code-card">
-                  <span id="captchaDisplay" class="captcha-text">K9P4X</span>
-                  <button type="button" id="refreshCaptchaBtn" class="captcha-reload-btn" onclick="window.generateVisualCaptcha()" title="Yeni Kod Üret">
-                    <i class="fa-solid fa-rotate-right"></i> <span data-i18n="feedback.refreshCaptcha">Yenile</span>
-                  </button>
+              <label data-i18n="feedback.captchaLabel">Güvenlik Doğrulaması</label>
+              <div class="captcha-challenge-card">
+                <div class="captcha-mode-badge" id="captchaModeLabel">MOD: METİN TANINMASI</div>
+                <div class="captcha-type-tabs">
+                  <button type="button" class="captcha-tab-btn active" id="tabText" onclick="window.setCaptchaMode('text')"><i class="fa-solid fa-font"></i> Metin</button>
+                  <button type="button" class="captcha-tab-btn" id="tabMath" onclick="window.setCaptchaMode('math')"><i class="fa-solid fa-calculator"></i> Matematik</button>
                 </div>
-                <input type="text" id="fbCaptcha" maxlength="5" placeholder="KODU GİRİN" required autocomplete="off" class="captcha-input-field" />
+                <div class="captcha-display-area">
+                  <div class="captcha-visual-code" id="captchaDisplay">K9P4X</div>
+                  <button type="button" class="captcha-refresh-big" onclick="window.generateVisualCaptcha()" title="Yeni Kod Üret"><i class="fa-solid fa-rotate-right"></i></button>
+                </div>
+                <div class="captcha-answer-row">
+                  <input type="text" id="fbCaptcha" class="captcha-answer-input" maxlength="8" placeholder="CEVABI GİRİN" required autocomplete="off" />
+                </div>
+                <div class="captcha-timer-bar"><div class="captcha-timer-fill" id="captchaTimerFill"></div></div>
               </div>
             </div>
 

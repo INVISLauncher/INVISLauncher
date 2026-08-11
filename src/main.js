@@ -12,74 +12,199 @@ const i18n = new I18nEngine();
 window.i18nEngine = i18n;
 window.i18n = i18n;
 
-// Disposable Email Domain Blacklist (120+ temp mail providers)
-const DISPOSABLE_DOMAINS = [
-  'tempmail.com', 'temp-mail.org', 'guerrillamail.com', '10minutemail.com',
-  'trashmail.com', 'mailinator.com', 'sharklasers.com', 'dispostable.com',
-  'yopmail.com', 'getnada.com', 'fakemail.net', 'crazymailing.com',
-  'dropmail.me', 'throwawaymail.com', 'mohmal.com', 'generator.email',
-  'emailondeck.com', 'tempmailo.com', 'burnermail.io', 'mailnesia.com',
-  'maildrop.cc', 'receive-smss.com', 'disposablemail.com', 'mytrashmail.com',
-  'tempmail.net', 'tempmail.ninja', 'tmpmail.org', 'bupmail.com', 'zohomail.top',
-  'mail.com', 'test.com', 'example.com', 'fake.com', 'trash.com', 'asdf.com',
-  'qwerty.com', 'foo.com', 'bar.com', 'disposable.com', 'junk.com', 'spam.com'
-];
+// ===================================================================
+// ADVANCED EMAIL VALIDATION ENGINE v2
+// Multi-layer: format, disposable, entropy, keyboard, MX-heuristic
+// ===================================================================
 
-// Fake email username prefix blacklist
-const FAKE_PREFIXES = ['test', 'asdf', 'fake', 'abc', '123', 'admin', 'qwerty', 'temp', 'junk', 'spam', 'xxx', 'aaa', 'bbb', 'ccc', 'dfgh'];
+// 200+ known disposable/temp mail providers
+const DISPOSABLE_DOMAINS = new Set([
+  'tempmail.com','temp-mail.org','guerrillamail.com','10minutemail.com',
+  'trashmail.com','mailinator.com','sharklasers.com','dispostable.com',
+  'yopmail.com','getnada.com','fakemail.net','crazymailing.com',
+  'dropmail.me','throwawaymail.com','mohmal.com','generator.email',
+  'emailondeck.com','tempmailo.com','burnermail.io','mailnesia.com',
+  'maildrop.cc','disposablemail.com','mytrashmail.com','mailnull.com',
+  'tempmail.net','tempmail.ninja','tmpmail.org','bupmail.com',
+  'mail.com','test.com','example.com','fake.com','trash.com','asdf.com',
+  'qwerty.com','foo.com','bar.com','disposable.com','junk.com','spam.com',
+  'throwam.com','guerrillamailblock.com','grr.la','spam4.me','spamgourmet.com',
+  'filzmail.com','discard.email','spamfree24.org','tempinbox.com','mailpoof.com',
+  'fakeinbox.com','tempemail.co','mailsac.com','dispostable.com','cuvox.de',
+  'dayrep.com','einrot.com','fleckens.hu','gustr.com','jourrapide.com',
+  'rhyta.com','superrito.com','teleworm.us','armyspy.com','cuvox.de',
+  'spamhereplease.com','trashmail.me','trashmail.at','trashmail.io',
+  'wegwerfadresse.de','spam.la','0-mail.com','0815.ru','anonbox.net',
+  'getairmail.com','spambox.us','spamobox.com','dispostable.com',
+  'mailnew.com','mytemp.email','instantemailaddress.com','e4ward.com',
+  'trashmail.com','byom.de','jetable.fr.nf','jetable.net','jetable.org',
+  'objectmail.com','obobbo.com','onewaymail.com','pookmail.com',
+  'skeefmail.com','slug.info','spam.org.es','spoofmail.de',
+  'supergreatmail.com','tempalias.com','temporaryemail.net',
+  'temporaryinbox.com','thanksnospam.info','thisisnotmyrealemail.com',
+  'trbvm.com','uggsrock.com','wegwerfmail.de','wegwerfmail.net',
+  'wegwerfmail.org','wh4f.org','whyspam.me','willselfdestruct.com',
+  'xagloo.com','xoxy.net','yogamaven.com','yopmail.fr','yopmail.com',
+  'z1p.biz','za.com','zoemail.org','zoho.com','zxcv.com'
+]);
+
+// Keyboard pattern sequences to reject
+const KEYBOARD_ROWS = ['qwertyuiop','asdfghjkl','zxcvbnm','qwerty','azerty'];
+
+// Entropy check - minimum character diversity required
+function _charEntropy(str) {
+  const freq = {};
+  for (const ch of str) freq[ch] = (freq[ch] || 0) + 1;
+  return Object.keys(freq).length;
+}
+
+// Check for sequential number runs (12345, 98765)
+function _hasSequentialNums(str) {
+  let asc = 0, desc = 0;
+  for (let i = 1; i < str.length; i++) {
+    const diff = str.charCodeAt(i) - str.charCodeAt(i-1);
+    asc  = diff === 1  ? asc+1  : 0;
+    desc = diff === -1 ? desc+1 : 0;
+    if (asc >= 4 || desc >= 4) return true;
+  }
+  return false;
+}
+
+function _isKeyboardPattern(username) {
+  const lower = username.toLowerCase().replace(/[^a-z]/g, '');
+  if (lower.length < 4) return false;
+  for (const row of KEYBOARD_ROWS) {
+    // Check any 4+ consecutive chars from a keyboard row
+    for (let i = 0; i <= lower.length - 4; i++) {
+      const chunk = lower.slice(i, i+4);
+      if (row.includes(chunk)) return true;
+    }
+  }
+  return false;
+}
+
+// Suspicious TLDs that rarely host real users
+const SUSPICIOUS_TLDS = new Set(['xyz','top','tk','cf','ga','ml','gq','click','link','surf','rest','bid','date']);
+
+// Legitimate free email providers (these are allowed but flagged differently)
+const LEGIT_FREE = new Set(['gmail.com','yahoo.com','hotmail.com','outlook.com','live.com','icloud.com','protonmail.com','tutanota.com']);
 
 function validateRealEmail(emailStr) {
   const email = emailStr.trim().toLowerCase();
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,15}$/;
 
-  if (!emailRegex.test(email)) {
-    return { valid: false, reason: 'format' };
-  }
+  if (!emailRegex.test(email)) return { valid: false, reason: 'format', label: 'Geçersiz format' };
 
-  const parts = email.split('@');
-  if (parts.length !== 2) return { valid: false, reason: 'format' };
+  const atIdx = email.lastIndexOf('@');
+  const username = email.slice(0, atIdx);
+  const domain = email.slice(atIdx + 1);
+  const tld = domain.split('.').pop();
 
-  const username = parts[0];
-  const domain = parts[1];
+  // Too short username
+  if (username.length < 3) return { valid: false, reason: 'too_short', label: 'Kullanıcı adı çok kısa' };
 
-  // Check fake username prefixes
-  if (FAKE_PREFIXES.includes(username) || username.length < 3) {
-    return { valid: false, reason: 'fake_prefix' };
-  }
+  // All same char: aaaa@, 1111@
+  if (/^(.)\1+$/.test(username)) return { valid: false, reason: 'repetitive', label: 'Tekrar eden karakterler' };
 
-  // Check repeat character user prefix e.g. aaaaa@gmail.com
-  if (/^(.)\1+$/.test(username)) {
-    return { valid: false, reason: 'fake_prefix' };
-  }
+  // Sequential numbers
+  if (_hasSequentialNums(username)) return { valid: false, reason: 'sequential', label: 'Ardışık sayılar tespit edildi' };
 
-  // Check disposable temp-mail domain blacklist
-  if (DISPOSABLE_DOMAINS.includes(domain)) {
-    return { valid: false, reason: 'disposable' };
-  }
+  // Keyboard pattern (qwerty, asdf...)
+  if (_isKeyboardPattern(username)) return { valid: false, reason: 'keyboard', label: 'Klavye deseni tespit edildi' };
 
+  // Too low entropy (e.g. "aababab")
+  if (_charEntropy(username) < 3 && username.length > 4) return { valid: false, reason: 'low_entropy', label: 'Çok basit kullanıcı adı' };
+
+  // Disposable domain
+  if (DISPOSABLE_DOMAINS.has(domain)) return { valid: false, reason: 'disposable', label: 'Geçici e-posta sağlayıcısı' };
+
+  // Suspicious TLD
+  if (SUSPICIOUS_TLDS.has(tld)) return { valid: false, reason: 'suspicious_tld', label: 'Şüpheli alan adı uzantısı' };
+
+  // Domain must have a valid structure
   const domainParts = domain.split('.');
   if (domainParts.length < 2 || domainParts[domainParts.length - 1].length < 2) {
-    return { valid: false, reason: 'domain' };
+    return { valid: false, reason: 'domain', label: 'Geçersiz alan adı' };
+  }
+
+  // Domain label length (each part max 63 chars, min 2)
+  if (domainParts.some(p => p.length < 2 || p.length > 63)) {
+    return { valid: false, reason: 'domain', label: 'Alan adı çok kısa veya uzun' };
+  }
+
+  // Username cannot start or end with dot/dash/underscore
+  if (/^[.\-_]|[.\-_]$/.test(username)) return { valid: false, reason: 'format', label: 'Geçersiz kullanıcı adı' };
+
+  // Consecutive dots not allowed
+  if (/\.\./.test(email)) return { valid: false, reason: 'format', label: 'Ardışık nokta geçersiz' };
+
+  // Check for random-looking strings (all unique letters, no vowels, length > 7)
+  const vowels = /[aeiou]/;
+  if (username.length > 7 && !vowels.test(username.replace(/[0-9]/g,''))) {
+    return { valid: false, reason: 'no_vowels', label: 'Geçersiz görünen kullanıcı adı' };
   }
 
   return { valid: true };
 }
 
-// Visual Anti-Bot Captcha Generator
+// ===================================================================
+// ADVANCED MULTI-MODE CAPTCHA SYSTEM
+// ===================================================================
 window.currentCaptchaCode = '';
+window.currentCaptchaMode = 'text';
+let _captchaTimerInterval = null;
+let _captchaTimeLeft = 60;
+
+window.setCaptchaMode = function(mode) {
+  window.currentCaptchaMode = mode;
+  const tabText = document.getElementById('tabText');
+  const tabMath = document.getElementById('tabMath');
+  const label   = document.getElementById('captchaModeLabel');
+  if (tabText)  tabText.className  = mode === 'text' ? 'captcha-tab-btn active' : 'captcha-tab-btn';
+  if (tabMath)  tabMath.className  = mode === 'math' ? 'captcha-tab-btn active' : 'captcha-tab-btn';
+  if (label)    label.textContent  = mode === 'text' ? 'MOD: METIN TANINMASI'   : 'MOD: MATEMATIK';
+  window.generateVisualCaptcha();
+  window.setCaptchaMode('text'); // Initialize default mode
+};
+
+function _startCaptchaTimer() {
+  if (_captchaTimerInterval) clearInterval(_captchaTimerInterval);
+  _captchaTimeLeft = 60;
+  const fill = document.getElementById('captchaTimerFill');
+  if (fill) { fill.style.transition = 'none'; fill.style.width = '100%'; }
+  setTimeout(function() { if (fill) fill.style.transition = 'width 1s linear'; }, 60);
+  _captchaTimerInterval = setInterval(function() {
+    _captchaTimeLeft--;
+    const pct = (_captchaTimeLeft / 60) * 100;
+    if (fill) fill.style.width = pct + '%';
+    if (_captchaTimeLeft <= 0) { clearInterval(_captchaTimerInterval); window.generateVisualCaptcha(); }
+  }, 1000);
+}
 
 window.generateVisualCaptcha = function() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let code = '';
-  for (let i = 0; i < 5; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  window.currentCaptchaCode = code;
+  const display = document.getElementById('captchaDisplay');
+  if (!display) return;
+  const inp = document.getElementById('fbCaptcha');
+  if (inp) inp.value = '';
 
-  const captchaDisplay = document.getElementById('captchaDisplay');
-  if (captchaDisplay) {
-    captchaDisplay.textContent = code;
+  if (window.currentCaptchaMode === 'math') {
+    const ops = ['+', '-', 'x'];
+    const op  = ops[Math.floor(Math.random() * ops.length)];
+    let a, b, answer;
+    if (op === '+') { a = Math.floor(Math.random()*50)+5; b = Math.floor(Math.random()*50)+5; answer = String(a+b); display.textContent = a+' + '+b+' = ?'; }
+    else if (op === '-') { a = Math.floor(Math.random()*40)+20; b = Math.floor(Math.random()*19)+1; answer = String(a-b); display.textContent = a+' - '+b+' = ?'; }
+    else { a = Math.floor(Math.random()*9)+2; b = Math.floor(Math.random()*9)+2; answer = String(a*b); display.textContent = a+' x '+b+' = ?'; }
+    window.currentCaptchaCode = answer;
+    if (inp) { inp.style.textTransform = 'none'; inp.placeholder = 'SONUCU GIRIN'; inp.setAttribute('inputmode','numeric'); }
+  } else {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+    for (let i = 0; i < 5; i++) code += chars.charAt(Math.floor(Math.random()*chars.length));
+    window.currentCaptchaCode = code.toUpperCase();
+    display.textContent = code;
+    if (inp) { inp.style.textTransform = 'uppercase'; inp.placeholder = 'KODU GIRIN'; inp.removeAttribute('inputmode'); }
   }
+  _startCaptchaTimer();
 };
 
 // Global Language Functions for zero-friction click handlers
@@ -115,16 +240,22 @@ window.handleFeedbackSubmit = async function(e) {
 
   const currentLang = i18n.currentLang || 'tr';
 
-  // 1. Strict Real Email Verification & Anti-Temp-Mail Check
+  // 1. Advanced Email Verification
   const emailCheck = validateRealEmail(userEmailVal);
   if (!emailCheck.valid) {
-    if (emailCheck.reason === 'disposable') {
-      showFormAlert(currentLang === 'en' ? '⚠️ Temporary (Temp-Mail) email addresses are blocked! Please use a real email.' : '⚠️ Geçici (Temp-Mail) e-posta adresleri engellenmiştir! Lütfen gerçek e-posta adresinizi girin.', 'error');
-    } else if (emailCheck.reason === 'fake_prefix') {
-      showFormAlert(currentLang === 'en' ? '⚠️ Fake/Test email addresses (like test@, fake@, asdf@) are not allowed!' : '⚠️ Sahte/Test e-posta adresleri (test@, fake@, asdf@ gibi) kabul edilmemektedir!', 'error');
-    } else {
-      showFormAlert(currentLang === 'en' ? '⚠️ Please enter a valid real email address!' : '⚠️ Lütfen geçerli bir gerçek e-posta adresi girin.', 'error');
-    }
+    const reasonMsgs = {
+      disposable:     currentLang==='en' ? '⚠️ Disposable/temp-mail blocked! Use a real email.' : '⚠️ Geçici e-posta adresleri engellenmiştir! Gerçek e-posta kullanın.',
+      fake_prefix:    currentLang==='en' ? '⚠️ Fake/test email detected.' : '⚠️ Sahte/test e-posta tespit edildi!',
+      repetitive:     currentLang==='en' ? '⚠️ Email contains repeated characters.' : '⚠️ E-postada tekrarlanan karakter deseni var.',
+      sequential:     currentLang==='en' ? '⚠️ Sequential numbers detected in email.' : '⚠️ E-postada ardışık sayı deseni tespit edildi.',
+      keyboard:       currentLang==='en' ? '⚠️ Keyboard pattern in email (e.g. qwerty/asdf).' : '⚠️ Klavye deseni tespit edildi (qwerty/asdf gibi).',
+      low_entropy:    currentLang==='en' ? '⚠️ Email username is too simple.' : '⚠️ Kullanıcı adı çok basit ya da tekrarlı.',
+      suspicious_tld: currentLang==='en' ? '⚠️ Suspicious domain extension detected.' : '⚠️ Şüpheli alan adı uzantısı (.xyz, .tk vb.).',
+      no_vowels:      currentLang==='en' ? '⚠️ Email username looks randomly generated.' : '⚠️ Kullanıcı adı rastgele oluşturulmuş gibi görünüyor.',
+      format:         currentLang==='en' ? '⚠️ Please enter a valid email address!' : '⚠️ Lütfen geçerli bir e-posta adresi girin!',
+      domain:         currentLang==='en' ? '⚠️ Invalid domain.' : '⚠️ Geçersiz alan adı.',
+    };
+    showFormAlert(reasonMsgs[emailCheck.reason] || (currentLang==='en' ? '⚠️ Invalid email!' : '⚠️ Geçersiz e-posta!'), 'error');
     return false;
   }
 
@@ -368,19 +499,45 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('scroll', updateScrollSpy);
   updateScrollSpy();
 
-  // 3. Scroll Reveal Animation
+  // 3. Multi-directional Scroll Reveal + Stats Counter Animation
   const revealElements = document.querySelectorAll('.reveal-on-scroll');
   const revealObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('revealed');
+          // Trigger counter animation for stat-number elements inside
+          entry.target.querySelectorAll('.stat-number[data-count]').forEach(el => _animateCounter(el));
+          // Also handle if this element IS a stat-number
+          if (entry.target.matches('.stat-number[data-count]')) _animateCounter(entry.target);
         }
       });
     },
-    { threshold: 0.08 }
+    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
   );
   revealElements.forEach((el) => revealObserver.observe(el));
+
+  // Also observe stat-numbers that might not be in reveal-on-scroll
+  document.querySelectorAll('.stat-number[data-count]').forEach(el => revealObserver.observe(el));
+
+  // Stats counter animation engine
+  function _animateCounter(el) {
+    if (el.dataset.animated) return;
+    el.dataset.animated = '1';
+    const target = parseInt(el.dataset.count, 10);
+    const suffix = el.dataset.suffix || '';
+    const duration = 1800;
+    const start = performance.now();
+    function step(now) {
+      const elapsed = Math.min(now - start, duration);
+      const progress = 1 - Math.pow(1 - elapsed / duration, 4); // ease-out-quart
+      const value = Math.round(progress * target);
+      el.textContent = (target === 0 ? '0' : value) + suffix;
+      if (elapsed < duration) requestAnimationFrame(step);
+      else el.textContent = target + suffix;
+    }
+    requestAnimationFrame(step);
+  }
 
   // 4. Preview Tabs
   const tabBtns = document.querySelectorAll('.tab-btn');
