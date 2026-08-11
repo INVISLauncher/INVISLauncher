@@ -923,18 +923,27 @@ body {
 .visual-captcha-box {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background: rgba(7, 10, 17, 0.95);
   border: 1px solid var(--border-glow);
-  padding: 4px 8px;
+  padding: 6px 12px;
   border-radius: var(--radius-sm);
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.6);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.15), inset 0 2px 5px rgba(0, 0, 0, 0.6);
 }
 
-#captchaCanvas {
-  border-radius: 4px;
-  background: #070A11;
-  display: block;
+.captcha-code-display {
+  font-family: 'Outfit', 'Courier New', monospace;
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: 5px;
+  color: var(--emerald-primary);
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.18), rgba(0, 240, 255, 0.18));
+  border: 1px dashed var(--emerald-primary);
+  padding: 6px 16px;
+  border-radius: 6px;
+  user-select: none;
+  text-shadow: 0 0 12px rgba(0, 255, 136, 0.8);
+  text-transform: uppercase;
 }
 
 .captcha-refresh-btn {

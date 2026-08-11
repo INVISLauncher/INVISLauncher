@@ -47,21 +47,10 @@ function validateRealEmail(emailStr) {
   return { valid: true };
 }
 
-// Visual Anti-Bot Canvas Captcha Generator
+// Visual Anti-Bot Captcha Generator
 window.currentCaptchaCode = '';
 
 window.generateVisualCaptcha = function() {
-  const canvas = document.getElementById('captchaCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const width = canvas.width;
-  const height = canvas.height;
-
-  // Clear background
-  ctx.fillStyle = '#070A11';
-  ctx.fillRect(0, 0, width, height);
-
-  // Generate 5-char alphanumeric code (excluding ambiguous chars)
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = '';
   for (let i = 0; i < 5; i++) {
@@ -69,41 +58,9 @@ window.generateVisualCaptcha = function() {
   }
   window.currentCaptchaCode = code;
 
-  // Draw background noise lines
-  for (let i = 0; i < 6; i++) {
-    ctx.strokeStyle = `rgba(0, 255, 136, ${Math.random() * 0.4 + 0.15})`;
-    ctx.lineWidth = Math.random() * 2 + 1;
-    ctx.beginPath();
-    ctx.moveTo(Math.random() * width, Math.random() * height);
-    ctx.lineTo(Math.random() * width, Math.random() * height);
-    ctx.stroke();
-  }
-
-  // Draw noise dots
-  for (let i = 0; i < 35; i++) {
-    ctx.fillStyle = `rgba(0, 240, 255, ${Math.random() * 0.5})`;
-    ctx.beginPath();
-    ctx.arc(Math.random() * width, Math.random() * height, Math.random() * 1.5, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // Draw distorted characters
-  ctx.font = 'bold 22px Outfit, sans-serif';
-  ctx.textBaseline = 'middle';
-  for (let i = 0; i < code.length; i++) {
-    const char = code[i];
-    ctx.save();
-    const x = 16 + i * 24;
-    const y = height / 2 + (Math.random() * 4 - 2);
-    const angle = (Math.random() - 0.5) * 0.4;
-    ctx.translate(x, y);
-    ctx.rotate(angle);
-
-    ctx.fillStyle = i % 2 === 0 ? '#00FF88' : '#00F0FF';
-    ctx.shadowColor = '#00FF88';
-    ctx.shadowBlur = 6;
-    ctx.fillText(char, 0, 0);
-    ctx.restore();
+  const captchaDisplay = document.getElementById('captchaDisplay');
+  if (captchaDisplay) {
+    captchaDisplay.textContent = code;
   }
 };
 
