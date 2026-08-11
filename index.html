@@ -3,14 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>INVIS Launcher - Minecraft İstemcisi</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>INVIS Launcher v3.1.2 - Minecraft İstemcisi</title>
   <meta name="description" content="INVIS Launcher - Modrinth ve CurseForge entegrasyonlu, reklamsız, hızlı ve sade Minecraft başlatıcısı." />
-  <link rel="icon" type="image/jpeg" href="./assets/logo-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB.jpg" />
+  <link rel="icon" type="image/jpeg" href="./assets/logo-C0EePlmB.jpg" />
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-  <!-- IMMEDIATE INLINE GLOBAL EVENT HANDLERS -->
+  <!-- IMMEDIATE INLINE GLOBAL EVENT HANDLERS & STALE CACHE PURGER -->
   <script>
+    // Automatic Stale Cache & LocalStorage Purge for v3.1.2
+    (function() {
+      var currentVer = "3.1.2_v3";
+      var savedVer = localStorage.getItem("invis_app_version");
+      if (savedVer !== currentVer) {
+        localStorage.clear();
+        localStorage.setItem("invis_app_version", currentVer);
+      }
+    })();
+
     window.toggleLangMenu = function(e) {
       if (e) e.stopPropagation();
       var menu = document.getElementById('langMenu');
@@ -56,8 +69,8 @@
       history.pushState('', document.title, window.location.pathname + window.location.search);
     };
   </script>
-  <script type="module" crossorigin src="./assets/index-Cl-CxLW-.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-Cfc1SYJ_.css">
+  <script type="module" crossorigin src="./assets/index-DPNwv0Xj.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-9x2PhHgV.css">
 </head>
 <body>
 
@@ -69,7 +82,7 @@
   <header class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="#hero" class="brand-logo">
-        <img src="./assets/logo-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB.jpg" alt="INVIS Logo" class="logo-img" />
+        <img src="./assets/logo-C0EePlmB.jpg" alt="INVIS Logo" class="logo-img" />
         <div class="logo-text">INVIS <span>Launcher</span></div>
       </a>
 
@@ -156,9 +169,9 @@
       <div class="container">
         <div class="section-header reveal-on-scroll">
           <div class="section-tagline" data-i18n="features.tagline">SADE VE KULLANIŞLI</div>
-          <h2 class="section-title" data-i18n="features.title">INVIS Launcher Özellikleri</h2>
+          <h2 class="section-title" data-i18n="features.title">INVIS Launcher v3.1.2 Özellikleri</h2>
           <p class="section-subtitle" data-i18n="features.subtitle">
-            Gereksiz karmaşıklıktan uzak, oyununuzu kolayca yönetmeniz için tasarlandı.
+            Gereksiz karmaşıklıktan uzak, oyununuzu ve modlarınızı kolayca yönetmeniz için tasarlandı.
           </p>
         </div>
 
@@ -184,36 +197,36 @@
           <!-- Card 3 -->
           <div class="feature-card reveal-on-scroll">
             <div class="feature-icon"><i class="fa-solid fa-cubes"></i></div>
-            <h3 class="feature-title" data-i18n="features.card3Title">Özel Paket Oluşturucu</h3>
+            <h3 class="feature-title" data-i18n="features.card3Title">Özel Paket & Tema Oluşturucu</h3>
             <p class="feature-desc" data-i18n="features.card3Desc">
-              Minecraft sürümünüzü, Fabric veya Vanilla yükleyicinizi ve RAM miktarınızı tek ekrandan belirleyin.
+              Minecraft sürümünüzü, Fabric/Forge yükleyicinizi ve canlı renk temalarınızı tek ekrandan belirleyin.
             </p>
           </div>
 
           <!-- Card 4 -->
           <div class="feature-card reveal-on-scroll">
             <div class="feature-icon"><i class="fa-solid fa-palette"></i></div>
-            <h3 class="feature-title" data-i18n="features.card4Title">Çeşitli Tema Seçenekleri</h3>
+            <h3 class="feature-title" data-i18n="features.card4Title">Çökme İzleme & Otomatik Onarım</h3>
             <p class="feature-desc" data-i18n="features.card4Desc">
-              Karanlık, Aydınlık, OLED ve Sistemle Eşle temaları arasında dilediğiniz gibi geçiş yapın.
+              Oyun çökme raporlarını arka planda otomatik algılayın ve anında günlük (log) incelemesi yapın.
             </p>
           </div>
 
           <!-- Card 5 -->
           <div class="feature-card reveal-on-scroll">
             <div class="feature-icon"><i class="fa-solid fa-ban"></i></div>
-            <h3 class="feature-title" data-i18n="features.card5Title">Sıfır Reklam</h3>
+            <h3 class="feature-title" data-i18n="features.card5Title">Gelişmiş Sürüm Taşıma</h3>
             <p class="feature-desc" data-i18n="features.card5Desc">
-              Can sıkıcı reklamlar veya gereksiz pencereler yok. Doğrudan oyununuza odaklanın.
+              Sürüm yükseltmelerinde modlarınızı uyumluluk kontrolüyle otomatik ve sorunsuz taşıyın.
             </p>
           </div>
 
           <!-- Card 6 -->
           <div class="feature-card reveal-on-scroll">
             <div class="feature-icon"><i class="fa-solid fa-folder-tree"></i></div>
-            <h3 class="feature-title" data-i18n="features.card6Title">Gelişmiş Dosya ve Java Yönetimi</h3>
+            <h3 class="feature-title" data-i18n="features.card6Title">Gelişmiş Depolama & Java Yönetimi</h3>
             <p class="feature-desc" data-i18n="features.card6Desc">
-              Mod, shader ve dille ilgili dosyalarınızı kolayca listeleyin, aktifleştirin veya silin.
+              Özel kurulum dizinleri, Java 21/25 desteği ve önbellek temizleme araçlarıyla tam kontrol sağlayın.
             </p>
           </div>
         </div>
@@ -240,7 +253,7 @@
               <span class="dot dot-green"></span>
             </div>
             <div class="window-title">
-              <img src="./assets/logo-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB.jpg" style="width:18px; height:18px; border-radius:4px;" alt="INVIS Logo" />
+              <img src="./assets/logo-C0EePlmB.jpg" style="width:18px; height:18px; border-radius:4px;" alt="INVIS Logo" />
               INVIS Launcher v3.1.2 - Application Interface
             </div>
             <div style="font-size:0.8rem; color:var(--emerald-primary);"><i class="fa-solid fa-circle" style="font-size:8px;"></i> Active</div>
@@ -266,22 +279,22 @@
           <div class="preview-body">
             <!-- Files Tab -->
             <div class="tab-content active" id="tab-files">
-              <img data-shot="1" src="./assets/real_shot1-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb.png" alt="INVIS Launcher Dosyalar ve Mod Listesi" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
+              <img data-shot="1" src="./assets/real_shot1-OZfwOBfb.png" alt="INVIS Launcher Dosyalar ve Mod Listesi" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
             </div>
 
             <!-- Explore Tab -->
             <div class="tab-content" id="tab-explore">
-              <img data-shot="2" src="./assets/real_shot2-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1.png" alt="INVIS Launcher Modrinth Keşfet" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
+              <img data-shot="2" src="./assets/real_shot2-Bg3Cc_E1.png" alt="INVIS Launcher Modrinth Keşfet" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
             </div>
 
             <!-- Settings Tab -->
             <div class="tab-content" id="tab-settings">
-              <img data-shot="3" src="./assets/real_shot3-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM.png" alt="INVIS Launcher Ayarlar ve Tema" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
+              <img data-shot="3" src="./assets/real_shot3-Bpmb4lLM.png" alt="INVIS Launcher Ayarlar ve Tema" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
             </div>
 
             <!-- New Pack Modal Tab -->
             <div class="tab-content" id="tab-newpack">
-              <img data-shot="4" src="./assets/real_shot4-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD.png" alt="INVIS Launcher Yeni Paket Oluşturma" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
+              <img data-shot="4" src="./assets/real_shot4-DkgEnSFD.png" alt="INVIS Launcher Yeni Paket Oluşturma" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
             </div>
           </div>
         </div>
@@ -295,16 +308,16 @@
           <div class="slider-wrapper">
             <div class="slider-track" id="sliderTrack">
               <div class="slide">
-                <img data-shot="1" src="./assets/real_shot1-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb.png" alt="Mod ve Dosya Yönetimi" class="slide-img" />
+                <img data-shot="1" src="./assets/real_shot1-OZfwOBfb.png" alt="Mod ve Dosya Yönetimi" class="slide-img" />
               </div>
               <div class="slide">
-                <img data-shot="2" src="./assets/real_shot2-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1.png" alt="Modrinth ve CurseForge Mod Arama" class="slide-img" />
+                <img data-shot="2" src="./assets/real_shot2-Bg3Cc_E1.png" alt="Modrinth ve CurseForge Mod Arama" class="slide-img" />
               </div>
               <div class="slide">
-                <img data-shot="3" src="./assets/real_shot3-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM.png" alt="Tema ve Java Ayarları" class="slide-img" />
+                <img data-shot="3" src="./assets/real_shot3-Bpmb4lLM.png" alt="Tema ve Java Ayarları" class="slide-img" />
               </div>
               <div class="slide">
-                <img data-shot="4" src="./assets/real_shot4-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD.png" alt="Yeni Oyun Paketi Oluşturucu" class="slide-img" />
+                <img data-shot="4" src="./assets/real_shot4-DkgEnSFD.png" alt="Yeni Oyun Paketi Oluşturucu" class="slide-img" />
               </div>
             </div>
           </div>
@@ -336,14 +349,14 @@
 
           <a href="https://github.com/INVISLauncher/INVISLauncher/releases/download/INVIS-Launcher-v3.1.2/INVIS.Launcher.Setup.3.1.2.exe" target="_blank" rel="noopener" class="btn-primary btn-large" style="margin-bottom:16px;">
             <i class="fa-brands fa-github" style="font-size:1.4rem;"></i>
-            <span data-i18n="download.winButton">GitHub'dan EXE İndir</span>
+            <span data-i18n="download.winButton">v3.1.2 EXE İndir (GitHub)</span>
           </a>
 
           <div class="download-meta">
             <span class="meta-pill" data-i18n="download.fileSize">Destek: Windows 10 / 11 (64-bit)</span>
             <span class="meta-pill"><i class="fa-solid fa-shield-halved" style="color:var(--emerald-primary);"></i> <span data-i18n="download.sha256">GitHub Üzerinde Doğrulanmış</span></span>
             <button class="btn-secondary" id="openChangelogBtn" style="padding:6px 16px; font-size:0.85rem;" data-i18n="download.changelogBtn" type="button">
-              Değişiklik Günlüğü
+              v3.1.2 Değişiklik Günlüğü
             </button>
           </div>
 
@@ -460,7 +473,7 @@
               <i class="fa-solid fa-chevron-down accordion-icon"></i>
             </div>
             <div class="accordion-body" data-i18n="faq.a2">
-              İndir butonuna tıkladığınızda doğrudan güvenli GitHub Releases sayfasına yönlendirilirsiniz ve en son .exe dosyasını indirebilirsiniz.
+              İndir butonuna tıkladığınızda doğrudan v3.1.2 .exe dosyasını indirmeye başlarsınız.
             </div>
           </div>
 
@@ -476,11 +489,11 @@
 
           <div class="accordion-item">
             <div class="accordion-header">
-              <span data-i18n="faq.q4">Farklı tema seçenekleri var mı?</span>
+              <span data-i18n="faq.q4">Özel tema oluşturabilir miyim?</span>
               <i class="fa-solid fa-chevron-down accordion-icon"></i>
             </div>
             <div class="accordion-body" data-i18n="faq.a4">
-              Evet! Ayarlar menüsünden Karanlık, Aydınlık, OLED ve Sistemle Eşle temalarından dilediğinizi seçebilirsiniz.
+              Evet! v3.1.2 ile gelen Özel Tema Yöneticisi sayesinde canlı önizleme ile kendi renk şemalarınızı oluşturup kaydedebilirsiniz.
             </div>
           </div>
 
@@ -490,7 +503,7 @@
               <i class="fa-solid fa-chevron-down accordion-icon"></i>
             </div>
             <div class="accordion-body" data-i18n="faq.a5">
-              Launcher sisteminizdeki Java yollarını (örneğin Java 25) otomatik algılar veya Ayarlar kısmından manuel yol belirlemenize imkan tanır.
+              Launcher sisteminizdeki Java yollarını (Java 21 ve Java 25 dahil) otomatik algılar veya Ayarlar kısmından manuel yol belirlemenize imkan tanır.
             </div>
           </div>
         </div>
@@ -503,7 +516,7 @@
   <div class="modal-overlay" id="changelogModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h3 style="font-family:var(--font-heading); font-size:1.3rem;" data-i18n="changelog.modalTitle">Sürüm Notları - INVIS Launcher</h3>
+        <h3 style="font-family:var(--font-heading); font-size:1.3rem;" data-i18n="changelog.modalTitle">Sürüm Notları - INVIS Launcher v3.1.2</h3>
         <button class="modal-close" id="closeChangelogBtn" type="button">&times;</button>
       </div>
       <div>
@@ -517,13 +530,6 @@
           <li data-i18n="changelog.v312_6">📁 <b>Game Directory & Storage Management:</b> Özel kurulum yolları ve önbellek/uygulama verisi temizleme kontrolleri.</li>
           <li data-i18n="changelog.v312_7">✨ <b>UI & UX Refinements:</b> Yerel işletim sistemi uyarıları yerine özel arayüz pencereleri ve buton düzeltmeleri.</li>
         </ul>
-
-        <div class="changelog-version" data-i18n="changelog.v241">Sürüm v2.3.1</div>
-        <ul class="changelog-list">
-          <li data-i18n="changelog.v241_1">Modrinth & CurseForge arama performansında iyileştirmeler</li>
-          <li data-i18n="changelog.v241_2">OLED ve Aydınlık tema seçeneği düzeltmeleri</li>
-          <li data-i18n="changelog.v241_3">Java konum algılama güncellemeleri</li>
-        </ul>
       </div>
       <div style="margin-top:24px; text-align:right;">
         <button class="btn-secondary" id="closeChangelogBtn2" data-i18n="changelog.closeBtn" type="button">Kapat</button>
@@ -536,7 +542,7 @@
     <div class="legal-container">
       <button class="legal-back-btn" onclick="window.hideLegalViews(event)" data-i18n="legal.backToHome" type="button">← Ana Sayfaya Dön</button>
       <h1 class="legal-title" data-i18n="legal.privacyTitle">Gizlilik Politikası</h1>
-      <div class="legal-date" data-i18n="legal.lastUpdated">Son Güncelleme: Temmuz 2026</div>
+      <div class="legal-date" data-i18n="legal.lastUpdated">Son Güncelleme: Ağustos 2026</div>
 
       <div class="legal-content">
         <p data-i18n="legal.privacyP1">INVIS Launcher olarak kullanıcılarımızın gizliliğine ve veri güvenliğine en üst düzeyde önem veriyoruz.</p>
@@ -551,7 +557,7 @@
         <p data-i18n="legal.privacyP4">Modrinth ve CurseForge resmi API'leri üzerinden sorgulamalar yapılır.</p>
 
         <h3 data-i18n="legal.privacyH4">4. Güncelleme ve Güvenlik</h3>
-        <p data-i18n="legal.privacyP5">INVIS Launcher sürümleri açık kaynaklı GitHub deposu üzerinden dağıtılmaktadır.</p>
+        <p data-i18n="legal.privacyP5">INVIS Launcher v3.1.2 sürümleri açık kaynaklı GitHub deposu üzerinden dağıtılmaktadır.</p>
       </div>
     </div>
   </div>
@@ -561,7 +567,7 @@
     <div class="legal-container">
       <button class="legal-back-btn" onclick="window.hideLegalViews(event)" data-i18n="legal.backToHome" type="button">← Ana Sayfaya Dön</button>
       <h1 class="legal-title" data-i18n="legal.termsTitle">Kullanım Koşulları</h1>
-      <div class="legal-date" data-i18n="legal.lastUpdated">Son Güncelleme: Temmuz 2026</div>
+      <div class="legal-date" data-i18n="legal.lastUpdated">Son Güncelleme: Ağustos 2026</div>
 
       <div class="legal-content">
         <p data-i18n="legal.termsP1">INVIS Launcher'ı indirerek veya kullanarak bu koşulları kabul etmiş sayılırsınız.</p>
@@ -587,7 +593,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="#hero" class="brand-logo">
-            <img src="./assets/logo-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB.jpg" alt="INVIS Logo" class="logo-img" />
+            <img src="./assets/logo-C0EePlmB.jpg" alt="INVIS Logo" class="logo-img" />
             <div class="logo-text">INVIS <span>Launcher</span></div>
           </a>
           <p data-i18n="footer.desc">
