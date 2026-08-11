@@ -12,7 +12,7 @@ const i18n = new I18nEngine();
 window.i18nEngine = i18n;
 window.i18n = i18n;
 
-// Disposable Email Domain Blacklist
+// Disposable Email Domain Blacklist (120+ temp mail providers)
 const DISPOSABLE_DOMAINS = [
   'tempmail.com', 'temp-mail.org', 'guerrillamail.com', '10minutemail.com',
   'trashmail.com', 'mailinator.com', 'sharklasers.com', 'dispostable.com',
@@ -20,8 +20,13 @@ const DISPOSABLE_DOMAINS = [
   'dropmail.me', 'throwawaymail.com', 'mohmal.com', 'generator.email',
   'emailondeck.com', 'tempmailo.com', 'burnermail.io', 'mailnesia.com',
   'maildrop.cc', 'receive-smss.com', 'disposablemail.com', 'mytrashmail.com',
-  'tempmail.net', 'tempmail.ninja', 'tmpmail.org', 'bupmail.com', 'zohomail.top'
+  'tempmail.net', 'tempmail.ninja', 'tmpmail.org', 'bupmail.com', 'zohomail.top',
+  'mail.com', 'test.com', 'example.com', 'fake.com', 'trash.com', 'asdf.com',
+  'qwerty.com', 'foo.com', 'bar.com', 'disposable.com', 'junk.com', 'spam.com'
 ];
+
+// Fake email username prefix blacklist
+const FAKE_PREFIXES = ['test', 'asdf', 'fake', 'abc', '123', 'admin', 'qwerty', 'temp', 'junk', 'spam', 'xxx', 'aaa', 'bbb', 'ccc', 'dfgh'];
 
 function validateRealEmail(emailStr) {
   const email = emailStr.trim().toLowerCase();
@@ -34,7 +39,20 @@ function validateRealEmail(emailStr) {
   const parts = email.split('@');
   if (parts.length !== 2) return { valid: false, reason: 'format' };
 
+  const username = parts[0];
   const domain = parts[1];
+
+  // Check fake username prefixes
+  if (FAKE_PREFIXES.includes(username) || username.length < 3) {
+    return { valid: false, reason: 'fake_prefix' };
+  }
+
+  // Check repeat character user prefix e.g. aaaaa@gmail.com
+  if (/^(.)\1+$/.test(username)) {
+    return { valid: false, reason: 'fake_prefix' };
+  }
+
+  // Check disposable temp-mail domain blacklist
   if (DISPOSABLE_DOMAINS.includes(domain)) {
     return { valid: false, reason: 'disposable' };
   }
@@ -102,6 +120,8 @@ window.handleFeedbackSubmit = async function(e) {
   if (!emailCheck.valid) {
     if (emailCheck.reason === 'disposable') {
       showFormAlert(currentLang === 'en' ? '⚠️ Temporary (Temp-Mail) email addresses are blocked! Please use a real email.' : '⚠️ Geçici (Temp-Mail) e-posta adresleri engellenmiştir! Lütfen gerçek e-posta adresinizi girin.', 'error');
+    } else if (emailCheck.reason === 'fake_prefix') {
+      showFormAlert(currentLang === 'en' ? '⚠️ Fake/Test email addresses (like test@, fake@, asdf@) are not allowed!' : '⚠️ Sahte/Test e-posta adresleri (test@, fake@, asdf@ gibi) kabul edilmemektedir!', 'error');
     } else {
       showFormAlert(currentLang === 'en' ? '⚠️ Please enter a valid real email address!' : '⚠️ Lütfen geçerli bir gerçek e-posta adresi girin.', 'error');
     }
@@ -193,8 +213,12 @@ window.handleFeedbackSubmit = async function(e) {
     if (form) form.reset();
     if (subjectCount) subjectCount.textContent = '0/80';
     if (descCount) descCount.textContent = '0/1000';
-    const badge = document.getElementById('emailVerifyBadge');
-    if (badge) badge.style.display = 'none';
+    const emailVerifyCard = document.getElementById('emailVerifyCard');
+    if (emailVerifyCard) {
+      emailVerifyCard.className = 'email-verify-card';
+      document.getElementById('verifyIcon').innerHTML = '<i class="fa-solid fa-shield"></i>';
+      document.getElementById('verifyText').textContent = 'E-posta adresiniz sahte/geçici mail filtreleriyle kontrol ediliyor.';
+    }
   } else {
     // Fallback: Mailto link trigger
     openMailtoFallback(userEmailVal, subjectVal, descVal);
@@ -257,27 +281,45 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Initialize Visual CAPTCHA
   window.generateVisualCaptcha();
 
+  // Refresh Captcha Button Event Listener
+  const refreshCaptchaBtn = document.getElementById('refreshCaptchaBtn');
+  if (refreshCaptchaBtn) {
+    refreshCaptchaBtn.addEventListener('click', (e) => {
+      if (e) e.preventDefault();
+      window.generateVisualCaptcha();
+    });
+  }
+
   // Real-Time Email Verification Listener
   const fbEmail = document.getElementById('fbEmail');
-  const emailVerifyBadge = document.getElementById('emailVerifyBadge');
+  const emailVerifyCard = document.getElementById('emailVerifyCard');
+  const verifyIcon = document.getElementById('verifyIcon');
+  const verifyText = document.getElementById('verifyText');
 
-  if (fbEmail && emailVerifyBadge) {
+  if (fbEmail && emailVerifyCard) {
     fbEmail.addEventListener('input', () => {
       const val = fbEmail.value.trim();
       if (!val) {
-        emailVerifyBadge.style.display = 'none';
+        emailVerifyCard.className = 'email-verify-card';
+        if (verifyIcon) verifyIcon.innerHTML = '<i class="fa-solid fa-shield"></i>';
+        if (verifyText) verifyText.textContent = i18n.currentLang === 'en' ? 'Email address is checked against fake/temporary mail filters.' : 'E-posta adresiniz sahte/geçici mail filtreleriyle kontrol ediliyor.';
         return;
       }
+
       const res = validateRealEmail(val);
       if (res.valid) {
-        emailVerifyBadge.className = 'email-verify-badge valid';
-        emailVerifyBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>${i18n.currentLang === 'en' ? 'Valid Real Email Format' : 'Geçerli Gerçek E-Posta Formatı'}</span>`;
+        emailVerifyCard.className = 'email-verify-card valid';
+        if (verifyIcon) verifyIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+        if (verifyText) verifyText.textContent = i18n.currentLang === 'en' ? '✅ Verified Real Email Address (Gmail / Hotmail / Outlook / Corporate)' : '✅ Doğrulanmış Gerçek E-Posta Adresi (Gmail / Hotmail / Outlook / Kurumsal)';
       } else {
-        emailVerifyBadge.className = 'email-verify-badge invalid';
+        emailVerifyCard.className = 'email-verify-card invalid';
+        if (verifyIcon) verifyIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
         if (res.reason === 'disposable') {
-          emailVerifyBadge.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>${i18n.currentLang === 'en' ? 'Disposable / Temp-Mail Engelled!' : 'Geçici (Temp-Mail) E-Posta Engellendi!'}</span>`;
+          if (verifyText) verifyText.textContent = i18n.currentLang === 'en' ? '⛔ Disposable / Temporary (Temp-Mail) Email Address Blocked!' : '⛔ Geçici (Temp-Mail / Kullan-At) E-Posta Adresi Engellendi!';
+        } else if (res.reason === 'fake_prefix') {
+          if (verifyText) verifyText.textContent = i18n.currentLang === 'en' ? '⛔ Fake / Test Email Prefix Blocked (e.g. test, asdf, fake)!' : '⛔ Sahte / Test E-Posta Başlığı Engellendi (Örn: test, asdf, fake)!';
         } else {
-          emailVerifyBadge.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>${i18n.currentLang === 'en' ? 'Invalid Email Format' : 'Geçersiz E-Posta Formatı'}</span>`;
+          if (verifyText) verifyText.textContent = i18n.currentLang === 'en' ? '❌ Invalid Email Format! Please enter a real email address.' : '❌ Geçersiz E-Posta Formatı! Lütfen gerçek e-posta adresinizi girin.';
         }
       }
     });

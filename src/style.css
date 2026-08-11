@@ -894,77 +894,107 @@ body {
   font-family: var(--font-heading);
 }
 
-.email-verify-badge {
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-top: 6px;
-  display: none;
-  align-items: center;
-  gap: 6px;
-  transition: var(--transition-fast);
-}
-
-.email-verify-badge.valid {
-  display: flex;
-  color: var(--emerald-primary);
-}
-
-.email-verify-badge.invalid {
-  display: flex;
-  color: #FF5F56;
-}
-
-.captcha-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.visual-captcha-box {
+.email-verify-card {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: rgba(12, 18, 30, 0.7);
+  border: 1px solid var(--border-glass);
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(7, 10, 17, 0.95);
-  border: 1px solid var(--border-glow);
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  box-shadow: 0 0 15px rgba(0, 255, 136, 0.15), inset 0 2px 5px rgba(0, 0, 0, 0.6);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: all 0.3s ease;
 }
 
-.captcha-code-display {
+.email-verify-card.valid {
+  background: rgba(0, 255, 136, 0.08);
+  border-color: rgba(0, 255, 136, 0.4);
+  color: #00FF88;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
+}
+
+.email-verify-card.valid .verify-icon {
+  color: #00FF88;
+}
+
+.email-verify-card.invalid {
+  background: rgba(255, 95, 86, 0.08);
+  border-color: rgba(255, 95, 86, 0.4);
+  color: #FF5F56;
+  box-shadow: 0 0 15px rgba(255, 95, 86, 0.15);
+}
+
+.email-verify-card.invalid .verify-icon {
+  color: #FF5F56;
+}
+
+.captcha-flex-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.captcha-code-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(7, 10, 17, 0.95);
+  border: 1px solid var(--border-glow);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.captcha-text {
   font-family: 'Outfit', 'Courier New', monospace;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 900;
-  letter-spacing: 5px;
+  letter-spacing: 6px;
   color: var(--emerald-primary);
-  background: linear-gradient(135deg, rgba(0, 255, 136, 0.18), rgba(0, 240, 255, 0.18));
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 240, 255, 0.2));
   border: 1px dashed var(--emerald-primary);
-  padding: 6px 16px;
+  padding: 6px 18px;
   border-radius: 6px;
   user-select: none;
-  text-shadow: 0 0 12px rgba(0, 255, 136, 0.8);
+  text-shadow: 0 0 14px rgba(0, 255, 136, 0.8);
   text-transform: uppercase;
 }
 
-.captcha-refresh-btn {
-  background: rgba(0, 255, 136, 0.1);
-  border: 1px solid rgba(0, 255, 136, 0.3);
+.captcha-reload-btn {
+  background: rgba(0, 255, 136, 0.12);
+  border: 1px solid rgba(0, 255, 136, 0.35);
   color: var(--emerald-primary);
-  width: 34px;
-  height: 34px;
+  padding: 8px 14px;
   border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 0.95rem;
-  transition: var(--transition-fast);
+  gap: 6px;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
 }
 
-.captcha-refresh-btn:hover {
+.captcha-reload-btn:hover {
   background: var(--emerald-primary);
   color: #05080E;
-  transform: rotate(180deg);
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+}
+
+.captcha-input-field {
+  flex: 1;
+  min-width: 150px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 800 !important;
+  font-size: 1.1rem !important;
+  text-align: center;
 }
 
 .form-alert {
