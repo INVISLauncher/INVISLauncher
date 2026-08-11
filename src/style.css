@@ -1136,6 +1136,65 @@ body {
   margin: 16px 0 8px 0;
 }
 
+.new-v3-highlight {
+  font-size: 1.25rem;
+  background: linear-gradient(135deg, #00FF88, #00F0FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.animated-v3-badge {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(0, 240, 255, 0.15)) !important;
+  border: 1px solid var(--emerald-primary) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4) !important;
+  animation: pulseV3Glow 2.5s infinite ease-in-out !important;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--emerald-primary);
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 10px var(--emerald-primary);
+  animation: liveDotPulse 1.4s infinite ease-in-out;
+}
+
+@keyframes liveDotPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.4; }
+}
+
+@keyframes pulseV3Glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), 0 0 40px rgba(0, 240, 255, 0.1); }
+  50% { box-shadow: 0 0 35px rgba(0, 255, 136, 0.6), 0 0 60px rgba(0, 240, 255, 0.3); }
+}
+
+.glow-btn-v3 {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-btn-v3::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(60deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: rotate(30deg);
+  animation: sweepGlow 4s infinite linear;
+}
+
+@keyframes sweepGlow {
+  0% { transform: translateX(-100%) rotate(30deg); }
+  20%, 100% { transform: translateX(100%) rotate(30deg); }
+}
+
 .changelog-list {
   padding-left: 20px;
   color: var(--text-muted);
