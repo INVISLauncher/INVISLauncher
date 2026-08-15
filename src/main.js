@@ -164,7 +164,6 @@ window.setCaptchaMode = function(mode) {
   if (tabMath)  tabMath.className  = mode === 'math' ? 'captcha-tab-btn active' : 'captcha-tab-btn';
   if (label)    label.textContent  = mode === 'text' ? 'MOD: METIN TANINMASI'   : 'MOD: MATEMATIK';
   window.generateVisualCaptcha();
-  window.setCaptchaMode('text'); // Initialize default mode
 };
 
 function _startCaptchaTimer() {
