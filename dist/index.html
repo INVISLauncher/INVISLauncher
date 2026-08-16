@@ -8,7 +8,7 @@
   <meta http-equiv="Expires" content="0" />
   <title>INVIS Launcher v3.1.2 - Minecraft İstemcisi</title>
   <meta name="description" content="INVIS Launcher - Modrinth ve CurseForge entegrasyonlu, reklamsız, hızlı ve sade Minecraft başlatıcısı." />
-  <link rel="icon" type="image/jpeg" href="./assets/logo-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB.jpg" />
+  <link rel="icon" type="image/jpeg" href="./assets/logo-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB.jpg" />
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
@@ -16,11 +16,22 @@
   <script>
     // Automatic Stale Cache & LocalStorage Purge for v3.1.2
     (function() {
-      var currentVer = "3.1.2_v5";
+      var currentVer = "3.1.2_v7_final";
       var savedVer = localStorage.getItem("invis_app_version");
       if (savedVer !== currentVer) {
         localStorage.clear();
         localStorage.setItem("invis_app_version", currentVer);
+      }
+      // Force kill any lingering ServiceWorker & CacheStorage
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          for (var i = 0; i < regs.length; i++) regs[i].unregister();
+        });
+      }
+      if ('caches' in window) {
+        caches.keys().then(function(keys) {
+          for (var j = 0; j < keys.length; j++) caches.delete(keys[j]);
+        });
       }
     })();
 
@@ -69,8 +80,8 @@
       history.pushState('', document.title, window.location.pathname + window.location.search);
     };
   </script>
-  <script type="module" crossorigin src="./assets/index-gfa92n3V-15uy2.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-9x2PhHgV-15uy2.css">
+  <script type="module" crossorigin src="./assets/index-D0_w1l-c-23k6y.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-9x2PhHgV-23k6y.css">
 </head>
 <body>
 
@@ -82,7 +93,7 @@
   <header class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="#hero" class="brand-logo">
-        <img src="./assets/logo-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB.jpg" alt="INVIS Logo" class="logo-img" />
+        <img src="./assets/logo-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB.jpg" alt="INVIS Logo" class="logo-img" />
         <div class="logo-text">INVIS <span>Launcher</span></div>
       </a>
 
@@ -248,7 +259,7 @@
               <span class="dot dot-green"></span>
             </div>
             <div class="window-title">
-              <img src="./assets/logo-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB.jpg" style="width:18px; height:18px; border-radius:4px;" alt="INVIS Logo" />
+              <img src="./assets/logo-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB.jpg" style="width:18px; height:18px; border-radius:4px;" alt="INVIS Logo" />
               INVIS Launcher v3.1.2 - Application Interface
             </div>
             <div style="font-size:0.8rem; color:var(--emerald-primary);"><i class="fa-solid fa-circle" style="font-size:8px;"></i> Active</div>
@@ -274,22 +285,22 @@
           <div class="preview-body">
             <!-- Files Tab -->
             <div class="tab-content active" id="tab-files">
-              <img data-shot="1" src="./assets/real_shot1-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb.png" alt="INVIS Launcher Dosyalar ve Mod Listesi" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
+              <img data-shot="1" src="./assets/real_shot1-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb.png" alt="INVIS Launcher Dosyalar ve Mod Listesi" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
             </div>
 
             <!-- Explore Tab -->
             <div class="tab-content" id="tab-explore">
-              <img data-shot="2" src="./assets/real_shot2-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1.png" alt="INVIS Launcher Modrinth Keşfet" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
+              <img data-shot="2" src="./assets/real_shot2-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1.png" alt="INVIS Launcher Modrinth Keşfet" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
             </div>
 
             <!-- Settings Tab -->
             <div class="tab-content" id="tab-settings">
-              <img data-shot="3" src="./assets/real_shot3-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM.png" alt="INVIS Launcher Ayarlar ve Tema" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
+              <img data-shot="3" src="./assets/real_shot3-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM.png" alt="INVIS Launcher Ayarlar ve Tema" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
             </div>
 
             <!-- New Pack Modal Tab -->
             <div class="tab-content" id="tab-newpack">
-              <img data-shot="4" src="./assets/real_shot4-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD.png" alt="INVIS Launcher Yeni Paket Oluşturma" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
+              <img data-shot="4" src="./assets/real_shot4-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD.png" alt="INVIS Launcher Yeni Paket Oluşturma" style="width:100%; height:auto; border-radius:var(--radius-md); border:1px solid var(--border-glass);" />
             </div>
           </div>
         </div>
@@ -303,16 +314,16 @@
           <div class="slider-wrapper">
             <div class="slider-track" id="sliderTrack">
               <div class="slide">
-                <img data-shot="1" src="./assets/real_shot1-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb.png" alt="Mod ve Dosya Yönetimi" class="slide-img" />
+                <img data-shot="1" src="./assets/real_shot1-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb-OZfwOBfb.png" alt="Mod ve Dosya Yönetimi" class="slide-img" />
               </div>
               <div class="slide">
-                <img data-shot="2" src="./assets/real_shot2-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1.png" alt="Modrinth ve CurseForge Mod Arama" class="slide-img" />
+                <img data-shot="2" src="./assets/real_shot2-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1-Bg3Cc_E1.png" alt="Modrinth ve CurseForge Mod Arama" class="slide-img" />
               </div>
               <div class="slide">
-                <img data-shot="3" src="./assets/real_shot3-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM.png" alt="Tema ve Java Ayarları" class="slide-img" />
+                <img data-shot="3" src="./assets/real_shot3-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM-Bpmb4lLM.png" alt="Tema ve Java Ayarları" class="slide-img" />
               </div>
               <div class="slide">
-                <img data-shot="4" src="./assets/real_shot4-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD.png" alt="Yeni Oyun Paketi Oluşturucu" class="slide-img" />
+                <img data-shot="4" src="./assets/real_shot4-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD-DkgEnSFD.png" alt="Yeni Oyun Paketi Oluşturucu" class="slide-img" />
               </div>
             </div>
           </div>
@@ -612,7 +623,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="#hero" class="brand-logo">
-            <img src="./assets/logo-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB.jpg" alt="INVIS Logo" class="logo-img" />
+            <img src="./assets/logo-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB-C0EePlmB.jpg" alt="INVIS Logo" class="logo-img" />
             <div class="logo-text">INVIS <span>Launcher</span></div>
           </a>
           <p data-i18n="footer.desc">
